@@ -25,12 +25,10 @@ import 'package:geolocator/geolocator.dart';
 class ProjectReports extends StatefulWidget {
   final Project project;
   bool isBreakTime;
-  final bool isCheckout;
 
   ProjectReports({
     @required this.project,
     @required this.isBreakTime,
-    @required this.isCheckout,
   });
 
   @override
@@ -417,9 +415,7 @@ class _ProjectReportsState extends State<ProjectReports> {
     _selectedIndex = index;
     switch (_selectedIndex) {
       case 0:
-        if (!widget.isCheckout) {
-          projectCheckOutConfirm();
-        }
+        projectCheckOutConfirm();
         break;
       case 1:
         Navigator.of(context).push(
@@ -568,56 +564,37 @@ class _ProjectReportsState extends State<ProjectReports> {
                     Container(
                       height: 50,
                       width: MediaQuery.of(context).size.width,
-                      color: Theme.of(context).primaryColorDark.withOpacity(0.8),
+                      color:
+                          Theme.of(context).primaryColorDark.withOpacity(0.8),
                       padding: EdgeInsets.only(left: 20, right: 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Container(
-                            child: !widget.isCheckout
-                                ? InkWell(
-                                    onTap: startBreakTime,
-                                    child: Row(
-                                      children: <Widget>[
-                                        Icon(Icons.free_breakfast,
-                                            color: Colors.white),
-                                        SizedBox(width: 10),
-                                        Text('break time',
-                                            style:
-                                                TextStyle(color: Colors.white)),
-                                      ],
-                                    ),
-                                  )
-                                : SizedBox(
-                                    width: 10,
-                                  ),
+                            child: InkWell(
+                              onTap: startBreakTime,
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.free_breakfast,
+                                      color: Colors.white),
+                                  SizedBox(width: 10),
+                                  Text('break time',
+                                      style: TextStyle(color: Colors.white)),
+                                ],
+                              ),
+                            ),
                           ),
                           Container(
-                            child: !widget.isCheckout
-                                ? Row(
-                                    children: <Widget>[
-                                      Text('work in progress',
-                                          style: TextStyle(
-                                              color: Colors.green[100],
-                                              fontSize: 12)),
-                                      SizedBox(width: 10),
-                                      Icon(Icons.gps_fixed,
-                                          color: Colors.green[100]),
-                                    ],
-                                  )
-                                : Row(
-                                    children: <Widget>[
-                                      Text('working day end',
-                                          style: TextStyle(
-                                              color: Colors.blue[100],
-                                              fontSize: 12)),
-                                      SizedBox(width: 10),
-                                      Icon(Icons.gps_off,
-                                          color: Colors.blue[100]),
-                                    ],
-                                  ),
-                          ),
+                              child: Row(
+                            children: <Widget>[
+                              Text('work in progress',
+                                  style: TextStyle(
+                                      color: Colors.green[100], fontSize: 12)),
+                              SizedBox(width: 10),
+                              Icon(Icons.gps_fixed, color: Colors.green[100]),
+                            ],
+                          )),
                         ],
                       ),
                     )
@@ -634,16 +611,8 @@ class _ProjectReportsState extends State<ProjectReports> {
                     backgroundColor: Theme.of(context).primaryColorDark,
                     items: <BottomNavigationBarItem>[
                       BottomNavigationBarItem(
-                        icon: !widget.isCheckout
-                            ? Icon(Icons.gps_off)
-                            : Icon(
-                                Icons.gps_off,
-                                color: Colors.grey[700],
-                              ),
-                        title: !widget.isCheckout
-                            ? Text('check out')
-                            : Text('check out',
-                                style: TextStyle(color: Colors.grey[700])),
+                        icon: Icon(Icons.gps_off),
+                        title: Text('check out'),
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.comment),
@@ -769,7 +738,7 @@ class _ProjectReportsState extends State<ProjectReports> {
           ),
         ),
         body: _body(),
-        floatingActionButton: !widget.isBreakTime && !widget.isCheckout
+        floatingActionButton: !widget.isBreakTime
             ? Container(
                 height: MediaQuery.of(context).size.height - 80,
                 child: Column(

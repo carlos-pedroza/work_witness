@@ -56,10 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
               );
             },
             child: Text('subscribe',
-                style: TextStyle(
-                    color: Theme.of(context).primaryColorDark, fontSize: 22)),
-            textColor: Colors.blue[800],
-            color: Colors.blue[800],
+                style: TextStyle(color: Colors.green[800], fontSize: 22)),
+            textColor: Colors.green[800],
+            color: Colors.green[800],
           ),
         )
       ],
@@ -154,6 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
+              flex: 10,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 color: Theme.of(context).primaryColor,
@@ -163,7 +163,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+            Container(
+              color: Theme.of(context).primaryColor,
+              padding: EdgeInsets.all(6),
+              child: Center(
+                child: Text(
+                  '1.1.5',
+                  style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                ),
+              ),
+            ),
             Expanded(
+              flex: 11,
               child: Container(
                 color: Colors.white54,
                 padding: EdgeInsets.only(top: 20),
@@ -240,7 +251,8 @@ class _LoginScreenState extends State<LoginScreen> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('You must activate your account email, if you want us to send you email validation again please visit: https://www.work-witness.app/panel'),
+                Text(
+                    'You must activate your account email, if you want us to send you email validation again please visit: https://www.work-witness.app/panel'),
               ],
             ),
           ),

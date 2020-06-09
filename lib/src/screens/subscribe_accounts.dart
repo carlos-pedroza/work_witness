@@ -182,15 +182,18 @@ class _SubscribeAccountScreenState extends State<SubscribeAccountScreen> {
                   : LoadingIndicator(),
             ),
             Container(
-              color: Colors.green[800],
-              height: 60,
+              color: Theme.of(context).primaryColorDark,
+              height: 80,
               width: MediaQuery.of(context).size.width,
-              child: FlatButton(
-                onPressed: () {
-                  onSubscribe(context);
-                },
-                child: Text('subscribe it',
-                    style: Theme.of(context).textTheme.bodyText1),
+              child: Center(
+                child: RaisedButton(
+                  color: Colors.green[800],
+                  onPressed: () {
+                    onSubscribe(context);
+                  },
+                  child: Text('subscribe it',
+                      style: Theme.of(context).textTheme.bodyText1),
+                ),
               ),
             ),
           ],

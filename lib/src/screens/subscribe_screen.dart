@@ -78,6 +78,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                   child: IntroductionText(
                     icon: Icons.person,
                     caption: introduction[0],
+                    onTap: () {
+                      goNext();
+                    },
                   ),
                 ),
                 Container(
@@ -94,6 +97,9 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                   child: IntroductionText(
                     icon: Icons.people,
                     caption: introduction[1],
+                    onTap: () {
+                      goNext();
+                    },
                   ),
                 ),
                 Container(
@@ -110,18 +116,24 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                   child: IntroductionText(
                     icon: Icons.business,
                     caption: introduction[2],
+                    onTap: () {
+                      goNext();
+                    },
                   ),
                 ),
               ],
             )),
             Container(
-              color: Colors.green[800],
-              height: 60,
+              color: Theme.of(context).primaryColorDark,
+              height: 80,
               width: MediaQuery.of(context).size.width,
-              child: FlatButton(
-                onPressed: goNext,
-                child: Text('continue',
-                    style: Theme.of(context).textTheme.bodyText1),
+              child: Center(
+                child: RaisedButton(
+                  color: Colors.green[800],
+                  onPressed: goNext,
+                  child: Text('continue',
+                      style: Theme.of(context).textTheme.bodyText1),
+                ),
               ),
             ),
           ],
@@ -134,27 +146,34 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
 class IntroductionText extends StatelessWidget {
   final IconData icon;
   final String caption;
+  final Function onTap;
 
   IntroductionText({
     @required this.icon,
     @required this.caption,
+    @required this.onTap,
   });
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Icon(
-          icon,
-          size: 80,
-        ),
-        Text(
-          caption,
-          style: Theme.of(context).textTheme.caption,
-          textAlign: TextAlign.justify,
-        ),
-      ],
+    return InkWell(
+        onTap: () {
+          onTap();
+        },
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Icon(
+            icon,
+            size: 80,
+          ),
+          Text(
+            caption,
+            style: Theme.of(context).textTheme.caption,
+            textAlign: TextAlign.justify,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -46,7 +46,7 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
         isCompanyError = false;
       }
       subscribeInfo.email = subscribeInfo.email.toLowerCase().trim();
-      bool emailValid = RegExp( 
+      bool emailValid = RegExp(
               r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
           .hasMatch(subscribeInfo.email);
       if (!emailValid) {
@@ -78,12 +78,14 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
   @override
   Widget build(BuildContext context) {
     void goNext() {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) =>
-              SubscribeAccountScreen(subscribeInfo: subscribeInfo),
-        ),
-      );
+      if (valid() == '') {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) =>
+                SubscribeAccountScreen(subscribeInfo: subscribeInfo),
+          ),
+        );
+      }
     }
 
     return Scaffold(
@@ -212,25 +214,24 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
                         SizedBox(height: 10),
                         Text(
                             'You can review our Privacy Policy in: https://www.work-witness.app',
-                            style: TextStyle(color: Colors.black26))
+                            style: TextStyle(color: Colors.black26)),
+                        SizedBox(height: 200,),
                       ],
                     ),
                   ),
                 ),
               )),
               Container(
-                color: Colors.green[800],
-                height: 60,
+                color: Theme.of(context).primaryColorDark,
+                height: 80,
                 width: MediaQuery.of(context).size.width,
-                child: FlatButton(
-                  onPressed: () {
-                    var result = valid();
-                    if (result == '') {
-                      goNext();
-                    }
-                  },
-                  child: Text('continue',
-                      style: Theme.of(context).textTheme.bodyText1),
+                child: Center(
+                  child: RaisedButton(
+                    color: Colors.green[800],
+                    onPressed: goNext,
+                    child: Text('continue',
+                        style: Theme.of(context).textTheme.bodyText1),
+                  ),
                 ),
               ),
             ],

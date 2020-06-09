@@ -172,7 +172,6 @@ class _CheckInState extends State<CheckIn> {
         builder: (context) => ProjectReports(
           project: widget.project,
           isBreakTime: false,
-          isCheckout: false,
         ),
       ),
     );
@@ -272,8 +271,7 @@ class _CheckInState extends State<CheckIn> {
                               ),
                             ),
                           ),
-                          padding: EdgeInsets.only(
-                              top: 10, bottom: 10),
+                          padding: EdgeInsets.only(top: 10, bottom: 10),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -321,58 +319,11 @@ class _CheckInState extends State<CheckIn> {
     );
   }
 
-  Widget _alreadyCheckIn() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      color: Theme.of(context).primaryColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.warning,
-              color: Colors.white,
-              size: (MediaQuery.of(context).size.width / 5)),
-          SizedBox(height: 20),
-          Text(
-            'You already checked out this work day!',
-            style: TextStyle(color: Colors.white, fontSize: 42),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 20),
-          RaisedButton(
-            padding: EdgeInsets.only(top: 16, bottom: 16, left: 30, right: 30),
-            child: Text(
-              'back',
-              style: TextStyle(color: Colors.white),
-            ),
-            color: Theme.of(context).primaryColorDark,
-            onPressed: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => Projects(),
-              ));
-            },
-            shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _body() {
     if (widget.checkTypeEnum == CheckTypeEnum.CheckIn) {
       if (widget.sendCheck != null) {
-        var _now = DateTime.now();
-        if (_now.day == widget.sendCheck.value.day &&
-            _now.month == widget.sendCheck.value.month &&
-            _now.year == widget.sendCheck.value.year) {
-          blocked = true;
-          return _alreadyCheckIn();
-        } else {
-          blocked = false;
-          return _content();
-        }
+        blocked = false;
+        return _content();
       } else {
         blocked = false;
         return _content();

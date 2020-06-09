@@ -159,13 +159,20 @@ class _ProjectsState extends State<Projects> {
                         ),
                         onTap: () {
                           loading = true;
-                          Controller.lastCheck(
-                                  projects[index].id, projects[index].idEmployee)
+                          Controller.lastCheck(projects[index].id,
+                                  projects[index].idEmployee)
                               .then((SendCheck sendCheck) {
                             if (sendCheck != null) {
                               if (sendCheck.idCheckType ==
-                                      CheckType.key(CheckTypeEnum.CheckOut) &&
-                                  isToday(sendCheck.value)) {
+                                  CheckType.key(CheckTypeEnum.CheckOut)) {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => CheckIn(
+                                        project: projects[index],
+                                        checkTypeEnum: CheckTypeEnum.CheckIn),
+                                  ),
+                                );
+                              } else {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) => ProjectReports(
@@ -173,32 +180,9 @@ class _ProjectsState extends State<Projects> {
                                       isBreakTime: sendCheck.idCheckType ==
                                           CheckType.key(
                                               CheckTypeEnum.BreakTimeStart),
-                                      isCheckout: true,
                                     ),
                                   ),
                                 );
-                              } else {
-                                if (checkInToday(sendCheck)) {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => ProjectReports(
-                                        project: projects[index],
-                                        isBreakTime: sendCheck.idCheckType ==
-                                            CheckType.key(
-                                                CheckTypeEnum.BreakTimeStart),
-                                        isCheckout: false,
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => CheckIn(
-                                          project: projects[index],
-                                          checkTypeEnum: CheckTypeEnum.CheckIn),
-                                    ),
-                                  );
-                                }
                               }
                             } else {
                               Navigator.of(context).pushReplacement(
@@ -223,10 +207,12 @@ class _ProjectsState extends State<Projects> {
                 color: Theme.of(context).primaryColorDark,
                 child: Column(
                   children: <Widget>[
-                    Text('need help?, please send email to: ',
-                        style: TextStyle(color: Colors.white54, fontSize: 18)),
-                    Text('support@work-witness.app',
-                        style: TextStyle(color: Colors.white54, fontSize: 18)),
+                    Text('support: support@work-witness.app',
+                        style: TextStyle(color: Colors.white54, fontSize: 12)),
+                    Text('Terms: https://www.work-witness.app/terms',
+                        style: TextStyle(color: Colors.white54, fontSize: 12)),
+                    Text('Privacy: https://www.work-witness.app/privacy_policy',
+                        style: TextStyle(color: Colors.white54, fontSize: 12)),
                   ],
                 ),
               ),
