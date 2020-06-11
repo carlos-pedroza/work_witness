@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:work_witness/src/controller/models/subscribe_info.dart';
 import 'package:work_witness/src/controller/utils.dart';
@@ -22,6 +25,8 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
   bool isCompanyError = false;
   bool isEmailError = false;
   bool isPasswordError = false;
+
+  bool terms = false;
 
   List<String> introduction = [
     'You are an individual or professional worker, you take you a long time to collect information and photos of your work done, you can reduce time and generate your reports automatically  to inform your clients using Work-Witness.',
@@ -70,6 +75,10 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
       } else {
         isPasswordError = false;
       }
+  /*     if (terms) {
+        result += (result != '' ? ', ' : '') +
+            'you must accept terms and condition, and, privacy policy';
+      } */
     });
 
     return result;
@@ -77,14 +86,45 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String validResult = '';
+    Future<bool> validDialog() {
+      return showDialog(
+        context: context,
+        builder: (context) => !Platform.isIOS
+            ? AlertDialog(
+                title: Text('incomplete!'),
+                content: Text('Please review: ' + validResult),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('Ok')),
+                ],
+              )
+            : CupertinoAlertDialog(
+                title: Text('incomplete!'),
+                content: Text('Please review: ' + validResult),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    child: new Text('Ok'),
+                    onPressed: () => Navigator.pop(context, false),
+                  ),
+                ],
+              ),
+      );
+    }
+
     void goNext() {
-      if (valid() == '') {
+      validResult = valid();
+      if (validResult == '') {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) =>
                 SubscribeAccountScreen(subscribeInfo: subscribeInfo),
           ),
         );
+      } else {
+        validDialog();
       }
     }
 
@@ -212,10 +252,31 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
                           },
                         ),
                         SizedBox(height: 10),
+                        /* Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Checkbox(
+                              value: terms,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  terms = value;
+                                });
+                              },
+                            ),
+                            Text(
+                              'I agree with terms and conditions, and privacy policy!',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            )
+                          ],
+                        ), */
                         Text(
-                            'You can review our Privacy Policy in: https://www.work-witness.app',
-                            style: TextStyle(color: Colors.black26)),
-                        SizedBox(height: 200,),
+                          'Privacy Policy and Terms and Conditions in: https://www.work-witness.app',
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                        SizedBox(
+                          height: 200,
+                        ),
                       ],
                     ),
                   ),

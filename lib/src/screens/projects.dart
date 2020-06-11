@@ -28,6 +28,7 @@ class _ProjectsState extends State<Projects> {
   Employee employee;
   List<Project> projects;
   bool loading = false;
+  bool loadingReports = false;
 
   Future<void> getControllerLocal() async {
     _controllerLocal = await ControllerLocal.create();
@@ -110,6 +111,10 @@ class _ProjectsState extends State<Projects> {
         checkDate.day == _now.day;
   }
 
+  bool anyProject() {
+    return projects.length > 0;
+  }
+
   Widget content() {
     return !loading
         ? Column(
@@ -144,61 +149,86 @@ class _ProjectsState extends State<Projects> {
                 ),
               ),
               Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 20),
-                  child: ListView.builder(
-                    itemCount: projects.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        splashColor: Colors.white54, // inkwell color
-                        child: ProjectCard(
-                          context: context,
-                          employee: employee,
-                          project: projects[index],
-                          refreshProjects: getListProjects,
-                        ),
-                        onTap: () {
-                          loading = true;
-                          Controller.lastCheck(projects[index].id,
-                                  projects[index].idEmployee)
-                              .then((SendCheck sendCheck) {
-                            if (sendCheck != null) {
-                              if (sendCheck.idCheckType ==
-                                  CheckType.key(CheckTypeEnum.CheckOut)) {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => CheckIn(
-                                        project: projects[index],
-                                        checkTypeEnum: CheckTypeEnum.CheckIn),
-                                  ),
-                                );
-                              } else {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => ProjectReports(
+                child: !loadingReports
+                    ? Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: anyProject()
+                            ? ListView.builder(
+                                itemCount: projects.length,
+                                itemBuilder: (context, index) {
+                                  return InkWell(
+                                    splashColor:
+                                        Colors.white54, // inkwell color
+                                    child: ProjectCard(
+                                      context: context,
+                                      employee: employee,
                                       project: projects[index],
-                                      isBreakTime: sendCheck.idCheckType ==
-                                          CheckType.key(
-                                              CheckTypeEnum.BreakTimeStart),
+                                      refreshProjects: getListProjects,
                                     ),
-                                  ),
-                                );
-                              }
-                            } else {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => CheckIn(
-                                      project: projects[index],
-                                      checkTypeEnum: CheckTypeEnum.CheckIn),
-                                ),
-                              );
-                            }
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
+                                    onTap: () {
+                                      loading = true;
+                                      Controller.lastCheck(projects[index].id,
+                                              projects[index].idEmployee)
+                                          .then((SendCheck sendCheck) {
+                                        if (sendCheck != null) {
+                                          if (sendCheck.idCheckType ==
+                                              CheckType.key(
+                                                  CheckTypeEnum.CheckOut)) {
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (context) => CheckIn(
+                                                    project: projects[index],
+                                                    checkTypeEnum:
+                                                        CheckTypeEnum.CheckIn),
+                                              ),
+                                            );
+                                          } else {
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProjectReports(
+                                                  project: projects[index],
+                                                  isBreakTime: sendCheck
+                                                          .idCheckType ==
+                                                      CheckType.key(
+                                                          CheckTypeEnum
+                                                              .BreakTimeStart),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        } else {
+                                          Navigator.of(context).pushReplacement(
+                                            MaterialPageRoute(
+                                              builder: (context) => CheckIn(
+                                                  project: projects[index],
+                                                  checkTypeEnum:
+                                                      CheckTypeEnum.CheckIn),
+                                            ),
+                                          );
+                                        }
+                                      });
+                                    },
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Container(
+                                  margin: EdgeInsets.all(30),
+                                  padding: EdgeInsets.all(30),
+                                    color: Theme.of(context).primaryColorDark.withOpacity(0.8),
+                                  child: Text(
+                                      'You have not been assigned a project yet',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1),
+                                )),
+                      )
+                    : LoadingIndicator(
+                        size: 80,
+                      ),
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
