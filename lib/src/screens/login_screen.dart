@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.all(6),
               child: Center(
                 child: Text(
-                  '1.1.5',
+                  '1.2.1',
                   style: TextStyle(color: Colors.grey[800], fontSize: 12),
                 ),
               ),
