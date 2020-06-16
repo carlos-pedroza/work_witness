@@ -75,7 +75,7 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
       } else {
         isPasswordError = false;
       }
-  /*     if (terms) {
+      /*     if (terms) {
         result += (result != '' ? ', ' : '') +
             'you must accept terms and condition, and, privacy policy';
       } */
@@ -252,49 +252,28 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
                           },
                         ),
                         SizedBox(height: 10),
-                        /* Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Checkbox(
-                              value: terms,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  terms = value;
-                                });
-                              },
-                            ),
-                            Text(
-                              'I agree with terms and conditions, and privacy policy!',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            )
-                          ],
-                        ), */
                         Text(
                           'Privacy Policy and Terms and Conditions in: https://www.work-witness.app',
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                         SizedBox(
-                          height: 200,
+                          height: 10,
+                        ),
+                        RaisedButton(
+                          color: Colors.green[800],
+                          padding: EdgeInsets.only(top: 20, left: 40, bottom: 20, right: 40),
+                          onPressed: goNext,
+                          child: Text('continue',
+                              style: Theme.of(context).textTheme.bodyText1),
+                        ),
+                        SizedBox(
+                          height: 300,
                         ),
                       ],
                     ),
                   ),
                 ),
               )),
-              Container(
-                color: Theme.of(context).primaryColorDark,
-                height: 80,
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                  child: RaisedButton(
-                    color: Colors.green[800],
-                    onPressed: goNext,
-                    child: Text('continue',
-                        style: Theme.of(context).textTheme.bodyText1),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

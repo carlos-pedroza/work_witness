@@ -1,9 +1,13 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:work_witness/src/controller/controller.dart';
 import 'package:work_witness/src/controller/models/subscribe_info.dart';
 import 'package:work_witness/src/controller/models/subscription.dart';
 import 'package:work_witness/src/controller/models/subscription_benefit.dart';
 import 'package:work_witness/src/controller/models/subscription_result.dart';
+import 'package:work_witness/src/screens/subscribe_benefits.dart';
 import 'package:work_witness/src/screens/subscription_success.dart';
 import 'package:work_witness/src/widgets/loading_Indicator.dart';
 
@@ -223,70 +227,16 @@ class AccountItem extends StatefulWidget {
 }
 
 class _AccountItemState extends State<AccountItem> {
-  List<SubscriptionBenefit> benefits;
   bool loading = false;
 
   @override
   void initState() {
-    benefits = [];
     loading = true;
-    Controller.listSubscriptionBenefits(widget.subscription.id)
-        .then((List<SubscriptionBenefit> _benefits) {
-      setState(() {
-        loading = false;
-        benefits = _benefits;
-      });
-    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _showMyDialog(String name) async {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(name + ' Benefits'),
-            content: ListView.builder(
-              itemCount: benefits.length,
-              itemBuilder: (context, i) => Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(benefits[i].name,
-                        style: Theme.of(context).textTheme.caption),
-                    Container(
-                      color: Colors.amber[50],
-                      padding: EdgeInsets.all(10),
-                      child: benefits[i].cover == 0
-                          ? Text(
-                              'no limits',
-                              style: Theme.of(context).textTheme.caption,
-                            )
-                          : Text('Cover: ' + benefits[i].cover.toString(),
-                              style: Theme.of(context).textTheme.caption),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-
     return InkWell(
       onTap: () {
         widget.onSelectItem(widget.index);
@@ -352,7 +302,13 @@ class _AccountItemState extends State<AccountItem> {
                               FlatButton(
                                 padding: EdgeInsets.all(0),
                                 onPressed: () {
-                                  _showMyDialog(widget.subscription.name);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => SubscribeBenefits(
+                                          subscription: widget.subscription),
+                                    ),
+                                  );
+                                  loading = true;
                                 },
                                 child: Text(
                                   'benefits',

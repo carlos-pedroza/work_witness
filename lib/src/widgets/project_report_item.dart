@@ -38,7 +38,10 @@ class ProjectReportItem extends StatelessWidget {
         color: Colors.white,
         child: ListTile(
           leading: Icon(Icons.assignment),
-          title: Row(
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(DateFormat.yMMMMd('en_US').format(projectReport.recordDate),
                   style: TextStyle(
@@ -47,7 +50,7 @@ class ProjectReportItem extends StatelessWidget {
               Text(
                 DateFormat.Hm('en_US').format(projectReport.recordDate),
                 style: TextStyle(
-                      color: Theme.of(context).primaryColorDark, fontSize: 18),
+                      color: Theme.of(context).primaryColorDark, fontSize: 16),
               ),
             ],
           ),

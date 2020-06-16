@@ -9,7 +9,6 @@ import 'package:work_witness/src/controller/models/project_report.dart';
 import 'package:work_witness/src/controller/models/project_report_photo.dart';
 import 'package:work_witness/src/screens/project_set_photo.dart';
 import 'package:work_witness/src/widgets/button-circular.dart';
-import 'package:light/light.dart';
 
 class ProjectReportPhotoCamaraScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -35,7 +34,6 @@ class _ProjectReportPhotoCamaraState
   bool loadingCamara = false;
   bool hasLamp = false;
   bool isLamp = false;
-  Light _light;
   StreamSubscription _subscription;
   String _luxString = 'Unknown';
   Localitation localitation =
@@ -53,21 +51,7 @@ class _ProjectReportPhotoCamaraState
     isLamp = false;
   }
 
-  void startListening() {
-    _light = new Light();
-    try {
-      hasLamp = true;
-      _subscription = _light.lightSensorStream.listen(onData);
-      isLamp = true;
-    } on LightException catch (exception) {
-      hasLamp = false;
-      print(exception);
-    }
-  }
-
   Future<void> initPlatformState() async {
-    startListening();
-    stopListening();
   }
 
   @override
@@ -152,20 +136,6 @@ class _ProjectReportPhotoCamaraState
     } catch (e) {
       // If an error occurs, log the error to the console.
       print(e);
-    }
-  }
-
-  turnFlash() {
-    if (hasLamp) {
-      setState(() {
-        if (isLamp) {
-          isLamp = false;
-          stopListening();
-        } else {
-          isLamp = true;
-          startListening();
-        }
-      });
     }
   }
 
