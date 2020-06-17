@@ -153,7 +153,10 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
-              flex: 10,
+              flex: 2,
+              child: Container(),),
+            Expanded(
+              flex: 3,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 color: Theme.of(context).primaryColor,
@@ -174,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Expanded(
-              flex: 11,
+              flex: 7,
               child: Container(
                 color: Colors.white54,
                 padding: EdgeInsets.only(top: 20),

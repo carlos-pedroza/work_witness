@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:path/path.dart' show join;
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:work_witness/src/controller/models/localitation.dart';
 import 'package:work_witness/src/controller/models/project_report.dart';
@@ -73,23 +73,23 @@ class _ProjectReportPhotoCamaraState
   }
 
   Future<String> getPhotoPath() async {
-    List<Directory> directories =
+    /* List<Directory> directories =
         await getExternalStorageDirectories(type: StorageDirectory.dcim);
     if (directories.length > 0) {
-      return join(
+      return p.join(
         // Store the picture in the temp directory.
         // Find the temp directory using the `path_provider` plugin.
         directories[directories.length - 1].path,
         '${DateTime.now().millisecondsSinceEpoch}.jpg',
       );
-    } else {
-      return join(
+    } else { */
+      return p.join(
         // Store the picture in the temp directory.
         // Find the temp directory using the `path_provider` plugin.
         (await getApplicationDocumentsDirectory()).path,
         '${DateTime.now()}.png',
       );
-    }
+    //} 
   }
 
   @override

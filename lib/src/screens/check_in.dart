@@ -220,6 +220,26 @@ class _CheckInState extends State<CheckIn> {
     return widget.checkTypeEnum == CheckTypeEnum.CheckIn;
   }
 
+  Widget clock() {
+    if (MediaQuery.of(context).size.width > 350) {
+      return Text(
+        DateFormat.Hms('en_US').format(new DateTime.now()),
+        style: TextStyle(
+          color: Colors.green[900],
+          fontSize: 58,
+        ),
+      );
+    } else {
+      return Text(
+        DateFormat.Hms('en_US').format(new DateTime.now()),
+        style: TextStyle(
+          color: Colors.green[900],
+          fontSize: 45,
+        ),
+      );
+    }
+  }
+
   Widget _content() {
     return Container(
       decoration: BoxDecoration(
@@ -301,13 +321,7 @@ class _CheckInState extends State<CheckIn> {
                               EdgeInsets.only(left: 30, right: 30, bottom: 20),
                           padding: EdgeInsets.only(
                               left: 15, right: 15, top: 4, bottom: 4),
-                          child: Text(
-                            DateFormat.Hms('en_US').format(new DateTime.now()),
-                            style: TextStyle(
-                              color: Colors.green[900],
-                              fontSize: 58,
-                            ),
-                          ),
+                          child: clock(),
                         ),
                       ],
                     ),

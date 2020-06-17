@@ -44,6 +44,50 @@ class ProjectCard extends StatelessWidget {
     return actions;
   }
 
+  Widget title() {
+    if (MediaQuery.of(context).size.width>350) {
+      return Text(
+                project.project,
+                style: Theme.of(context).textTheme.bodyText1,
+              );
+    } else {
+      return Text(
+              project.project,
+              style: Theme.of(context).textTheme.bodyText2,
+            );
+    }
+  }
+
+  Widget subTitle(_initialDate) {
+    if (MediaQuery.of(context).size.width>350) {
+      return Row(
+          children: <Widget>[
+            Icon(Icons.linear_scale, color: Theme.of(context).dividerColor),
+            Container(
+              margin: EdgeInsets.only(left: 10),
+              child: Text(
+                _initialDate,
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+            )
+          ],
+        );
+    } else {
+        return Row(
+          children: <Widget>[
+            Icon(Icons.linear_scale, color: Theme.of(context).dividerColor, size: 10,),
+            Container(
+              margin: EdgeInsets.only(left: 5),
+              child: Text(
+                _initialDate,
+                style: TextStyle(color: Colors.white, fontSize: 10),
+              ),
+            )
+          ],
+        );
+    }
+  }
+
   Widget listTile(BuildContext context, String _initialDate) {
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
@@ -61,23 +105,9 @@ class ProjectCard extends StatelessWidget {
             size: 48,
           ),
         ),
-        title: Text(
-          project.project,
-          style: Theme.of(context).textTheme.bodyText1,
-        ),
+        title: title(),
         // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-        subtitle: Row(
-          children: <Widget>[
-            Icon(Icons.linear_scale, color: Theme.of(context).dividerColor),
-            Container(
-              margin: EdgeInsets.only(left: 10),
-              child: Text(
-                _initialDate,
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            )
-          ],
-        ),
+        subtitle: subTitle(_initialDate),
         trailing:
             Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 48.0),
       ),

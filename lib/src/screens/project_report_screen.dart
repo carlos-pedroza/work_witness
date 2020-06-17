@@ -781,7 +781,7 @@ class _ProjectReportPhotoScreenState extends State<ProjectReportPhotoScreen> {
                                     )
                                   : Container())
                               : LoadingIndicator(
-                                  size: 80,
+                                  size: 40,
                                 ),
                         ),
                       ],

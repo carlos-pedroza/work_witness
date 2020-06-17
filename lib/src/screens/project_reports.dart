@@ -497,6 +497,50 @@ class _ProjectReportsState extends State<ProjectReports> {
     });
   }
 
+  Widget breakTimeButtom() {
+    if (MediaQuery.of(context).size.width > 350) {
+      return Row(
+        children: <Widget>[
+          Icon(Icons.free_breakfast, color: Colors.white),
+          SizedBox(width: 10),
+          Text('break time', style: TextStyle(color: Colors.white)),
+        ],
+      );
+    } else {
+      return Row(
+        children: <Widget>[
+          SizedBox(width: 20),
+          Icon(Icons.free_breakfast, color: Colors.white),
+          SizedBox(width: 10),
+          Text('break', style: TextStyle(color: Colors.white, fontSize: 12)),
+        ],
+      );
+    }
+  }
+
+  Widget workProgress() {
+    if (MediaQuery.of(context).size.width > 350) {
+      return Row(
+        children: <Widget>[
+          Text('work in progress',
+              style: TextStyle(color: Colors.green[100], fontSize: 12)),
+          SizedBox(width: 10),
+          Icon(Icons.gps_fixed, color: Colors.green[100]),
+        ],
+      );
+    } else {
+      return Row(
+        children: <Widget>[
+          Text('progress',
+              style: TextStyle(color: Colors.green[100], fontSize: 12)),
+          SizedBox(width: 10),
+          Icon(Icons.gps_fixed, color: Colors.green[100]),
+          SizedBox(width: 20),
+        ],
+      );
+    }
+  }
+
   Widget content() {
     return Container(
       decoration: BoxDecoration(
@@ -574,27 +618,12 @@ class _ProjectReportsState extends State<ProjectReports> {
                           Container(
                             child: InkWell(
                               onTap: startBreakTime,
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.free_breakfast,
-                                      color: Colors.white),
-                                  SizedBox(width: 10),
-                                  Text('break time',
-                                      style: TextStyle(color: Colors.white)),
-                                ],
-                              ),
+                              child: breakTimeButtom(),
                             ),
                           ),
                           Container(
-                              child: Row(
-                            children: <Widget>[
-                              Text('work in progress',
-                                  style: TextStyle(
-                                      color: Colors.green[100], fontSize: 12)),
-                              SizedBox(width: 10),
-                              Icon(Icons.gps_fixed, color: Colors.green[100]),
-                            ],
-                          )),
+                            child: workProgress(),
+                          ),
                         ],
                       ),
                     )

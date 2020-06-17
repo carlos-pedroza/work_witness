@@ -232,7 +232,7 @@ class _ProjectsState extends State<Projects> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(10),
                 height: 90,
                 color: Theme.of(context).primaryColorDark,
                 child: Column(
