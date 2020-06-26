@@ -39,6 +39,7 @@ dependencies:
   flutter_slidable: "^0.5.4"
   google_maps_flutter: ^0.5.27+3
   json_serializable: ^3.3.0
+  connectivity: ^0.4.8+6
 
 dev_dependencies:
   flutter_test:
