@@ -78,24 +78,6 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Theme.of(context).primaryColorDark,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Theme.of(context).primaryColorDark.withOpacity(0.25),
-          title: Text('Work Witness',
-              style: TextStyle(color: Colors.white, fontSize: 22)),
-          centerTitle: true,
-          leading: backButton
-              ? IconButton(
-                  icon: Icon(
-                    Icons.navigate_before,
-                    color: Colors.white,
-                    size: 28,
-                  ),
-                  onPressed: () {
-                    onBack();
-                  })
-              : Container(),
-        ),
         body: LoginScreen(),
       ),
     );

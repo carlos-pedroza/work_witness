@@ -299,22 +299,6 @@ class _AccountItemState extends State<AccountItem> {
                                 ),
                               ),
                               Spacer(),
-                              FlatButton(
-                                padding: EdgeInsets.all(0),
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => SubscribeBenefits(
-                                          subscription: widget.subscription),
-                                    ),
-                                  );
-                                  loading = true;
-                                },
-                                child: Text(
-                                  'benefits',
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
-                              ),
                               SizedBox(
                                 width: 4,
                               ),
@@ -323,6 +307,22 @@ class _AccountItemState extends State<AccountItem> {
                                 width: 20,
                               )
                             ],
+                          ),
+                          FlatButton(
+                            padding: EdgeInsets.all(0),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => SubscribeBenefits(
+                                      subscription: widget.subscription),
+                                ),
+                              );
+                              loading = true;
+                            },
+                            child: Text(
+                              'benefits',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
                           ),
                           Container(
                             padding:

@@ -195,7 +195,7 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                                   Theme.of(context).textTheme.bodyText1.color,
                               icon: !showPhotos
                                   ? Icons.camera_alt
-                                  : Icons.view_agenda,
+                                  : Icons.arrow_back_ios,
                               buttomSize: 50,
                               iconSize: 30,
                               loadingSize: 30,
@@ -225,7 +225,7 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                                 Theme.of(context).textTheme.bodyText1.color,
                             icon: !showPhotos
                                 ? Icons.camera_alt
-                                : Icons.view_agenda,
+                                : Icons.arrow_back_ios,
                             buttomSize: 50,
                             iconSize: 30,
                             loadingSize: 30,
@@ -252,7 +252,7 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
         : getListProjectType();
   }
 
-  bool onSave() {
+  void onSave() {
     var projectReportQuestion = widget.projectReport.projectReportQuestions
         .firstWhere((e) => e.idProjectTypeQuestion == null);
     widget.projectReport.description = projectReportQuestion.value;
@@ -283,49 +283,6 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorDark.withOpacity(0.6),
-            border: Border(
-              top: BorderSide(
-                color: Theme.of(context).primaryColor,
-                width: 1.0,
-              ),
-              bottom: BorderSide(
-                color: Theme.of(context).primaryColor,
-                width: 1.0,
-              ),
-            ),
-          ),
-          padding: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                widget.project.employee,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              Text(DateFormat.yMMMMd('en_US').format(new DateTime.now()),
-                  style: Theme.of(context).textTheme.bodyText2),
-            ],
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorDark.withOpacity(0.9),
-            border: Border(
-              bottom: BorderSide(
-                color: Theme.of(context).dividerColor,
-                width: 1.0,
-              ),
-            ),
-          ),
-          padding: EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 10),
-          child: Text(
-            widget.project.project,
-            textAlign: TextAlign.center,
-          ),
-        ),
         Expanded(
           child: Container(
             color: Theme.of(context).primaryColor,
@@ -670,83 +627,71 @@ class _ProjectReportPhotoScreenState extends State<ProjectReportPhotoScreen> {
                               margin:
                                   EdgeInsets.only(top: 10, left: 10, right: 10),
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Text(
-                                        'Latitude: ',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          backgroundColor: Theme.of(context)
-                                              .primaryColorDark
-                                              .withOpacity(0.8),
-                                        ),
-                                      ),
-                                      Text(
-                                        widget.projectReport
-                                            .projectReportPhotos[index].latitude
-                                            .toString(),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          backgroundColor: Theme.of(context)
-                                              .primaryColorDark
-                                              .withOpacity(0.8),
-                                        ),
-                                      ),
-                                    ],
+                                  Text(
+                                    'Latitude: ',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      backgroundColor: Theme.of(context)
+                                          .primaryColorDark
+                                          .withOpacity(0.8),
+                                    ),
                                   ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text(
-                                        'longitude: ',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          backgroundColor: Theme.of(context)
-                                              .primaryColorDark
-                                              .withOpacity(0.8),
-                                        ),
-                                      ),
-                                      Text(
-                                        widget
-                                            .projectReport
-                                            .projectReportPhotos[index]
-                                            .longitude
-                                            .toString(),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          backgroundColor: Theme.of(context)
-                                              .primaryColorDark
-                                              .withOpacity(0.8),
-                                        ),
-                                      ),
-                                    ],
+                                  Text(
+                                    widget.projectReport
+                                        .projectReportPhotos[index].latitude
+                                        .toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      backgroundColor: Theme.of(context)
+                                          .primaryColorDark
+                                          .withOpacity(0.8),
+                                    ),
+                                  ),
+                                  Text(
+                                    'longitude: ',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      backgroundColor: Theme.of(context)
+                                          .primaryColorDark
+                                          .withOpacity(0.8),
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.projectReport
+                                        .projectReportPhotos[index].longitude
+                                        .toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      backgroundColor: Theme.of(context)
+                                          .primaryColorDark
+                                          .withOpacity(0.8),
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                            Container(
-                                margin: EdgeInsets.all(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    !widget.projectReport.isSended
-                                        ? IconButton(
-                                            icon: Icon(Icons.delete_forever,
-                                                color: Colors.white, size: 34),
-                                            onPressed: () {
-                                              deleteProjectReportPhotoConfirm(
-                                                  widget.projectReport
-                                                          .projectReportPhotos[
-                                                      index]);
-                                            },
-                                          )
-                                        : Container(),
-                                  ],
-                                )),
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: !widget.projectReport.isSended
+                                  ? IconButton(
+                                      icon: Icon(Icons.delete_forever,
+                                          color: Colors.white, size: 34),
+                                      onPressed: () {
+                                        deleteProjectReportPhotoConfirm(widget
+                                            .projectReport
+                                            .projectReportPhotos[index]);
+                                      },
+                                    )
+                                  : Container(),
+                            ),
                           ],
                         ),
                       );

@@ -38,6 +38,7 @@ class _ProjectReportPhotoCamaraState
   String _luxString = 'Unknown';
   Localitation localitation =
       Localitation(latitude: 0, longitude: 0, register: null);
+  int photoCount = 1;
 
   void onData(int luxValue) async {
     print("Lux value: $luxValue");
@@ -73,23 +74,12 @@ class _ProjectReportPhotoCamaraState
   }
 
   Future<String> getPhotoPath() async {
-    /* List<Directory> directories =
-        await getExternalStorageDirectories(type: StorageDirectory.dcim);
-    if (directories.length > 0) {
-      return p.join(
-        // Store the picture in the temp directory.
-        // Find the temp directory using the `path_provider` plugin.
-        directories[directories.length - 1].path,
-        '${DateTime.now().millisecondsSinceEpoch}.jpg',
-      );
-    } else { */
-      return p.join(
-        // Store the picture in the temp directory.
-        // Find the temp directory using the `path_provider` plugin.
-        (await getApplicationDocumentsDirectory()).path,
-        '${DateTime.now()}.png',
-      );
-    //} 
+    return p.join(
+      // Store the picture in the temp directory.
+      // Find the temp directory using the `path_provider` plugin.
+      (await getApplicationDocumentsDirectory()).path,
+      'photo-${DateTime.now().millisecondsSinceEpoch}.png',
+    );
   }
 
   @override
