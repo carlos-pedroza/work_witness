@@ -9,6 +9,7 @@ import 'package:work_witness/src/screens/subscribe_screen.dart';
 import 'package:work_witness/src/widgets/button-circular.dart';
 import '../controller/controller.dart';
 import '../controller/models/subtoken.dart';
+import 'package:connectivity/connectivity.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -153,14 +154,11 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Expanded(
-              flex: 1,
-              child: Container(
-                child: Container(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),),
-            Expanded(
               flex: 2,
+              child: Container(),
+            ),
+            Expanded(
+              flex: 3,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 color: Theme.of(context).primaryColor,
@@ -175,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: EdgeInsets.all(6),
               child: Center(
                 child: Text(
-                  '1.2.3',
+                  '1.2.1',
                   style: TextStyle(color: Colors.grey[800], fontSize: 12),
                 ),
               ),
@@ -339,6 +337,57 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void openDialogNoConnection() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Not Internet access'),
+        content:
+            Text('This application have to be able to connect to Internet'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Ok'),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  void openDialogNoConnectionCupertino() {
+    showDialog(
+      context: context,
+      builder: (_) => CupertinoAlertDialog(
+        title: Text('Not Internet access'),
+        content:
+            Text('This application have to be able to connect to Internet'),
+        actions: <Widget>[
+          CupertinoDialogAction(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  void validConnection(BuildContext context) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult != ConnectivityResult.mobile &&
+        connectivityResult != ConnectivityResult.wifi) {
+      if (Platform.isIOS) {
+        openDialogNoConnectionCupertino();
+      } else {
+        openDialogNoConnection();
+      }
+    }
+  }
+
   @override
   void initState() {
     Controller.getEmail().then((String _emailPref) {
@@ -351,6 +400,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    validConnection(context);
     return drawScreen();
   }
 }
