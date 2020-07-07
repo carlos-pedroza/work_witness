@@ -161,30 +161,8 @@ class _SubscribeAccountScreenState extends State<SubscribeAccountScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 90),
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: Text(
-                'Please select the type of subscribe',
-                style: Theme.of(context).textTheme.headline1,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              child: !loading
-                  ? ListView.builder(
-                      padding: EdgeInsets.only(top: 0),
-                      itemCount: subscriptions.length,
-                      itemBuilder: (context, i) => AccountItem(
-                        index: i,
-                        icon: icons[i],
-                        subscription: subscriptions[i],
-                        selected: subscriptionSelects[i],
-                        onSelectItem: onSelectItem,
-                      ),
-                    )
-                  : LoadingIndicator(),
-            ),
+            AccountItem(),
+            Expanded(child: Container()),
             Container(
               color: Theme.of(context).primaryColorDark,
               height: 80,
@@ -208,140 +186,44 @@ class _SubscribeAccountScreenState extends State<SubscribeAccountScreen> {
 }
 
 class AccountItem extends StatefulWidget {
-  final int index;
-  final IconData icon;
-  final Subscription subscription;
-  final bool selected;
-  final Function(int) onSelectItem;
-
-  AccountItem({
-    @required this.index,
-    @required this.icon,
-    @required this.subscription,
-    @required this.selected,
-    @required this.onSelectItem,
-  });
-
   @override
   _AccountItemState createState() => _AccountItemState();
 }
 
 class _AccountItemState extends State<AccountItem> {
-  bool loading = false;
-
-  @override
-  void initState() {
-    loading = true;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        widget.onSelectItem(widget.index);
-      },
+    return Container(
+      padding: EdgeInsets.only(top: 100, left: 20, right: 20),
       child: Card(
         color: Colors.white,
         elevation: 5,
-        child: Padding(
-          padding: EdgeInsets.all(7),
-          child: Stack(children: <Widget>[
-            Align(
-              alignment: Alignment.centerRight,
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                      padding: const EdgeInsets.only(left: 10, top: 5),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                child: IconButton(
-                                    icon: Icon(
-                                      widget.selected
-                                          ? Icons.check_circle
-                                          : Icons.radio_button_unchecked,
-                                      size: 36,
-                                      color: widget.selected
-                                          ? Colors.green
-                                          : Colors.black87,
-                                    ),
-                                    onPressed: () {
-                                      widget.onSelectItem(widget.index);
-                                    }),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(top: 20),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      widget.subscription.name,
-                                      style:
-                                          Theme.of(context).textTheme.subtitle2,
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      widget.subscription.offer,
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Spacer(),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Icon(widget.icon),
-                              SizedBox(
-                                width: 20,
-                              )
-                            ],
-                          ),
-                          FlatButton(
-                            padding: EdgeInsets.all(0),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => SubscribeBenefits(
-                                      subscription: widget.subscription),
-                                ),
-                              );
-                              loading = true;
-                            },
-                            child: Text(
-                              'benefits',
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                          ),
-                          Container(
-                            padding:
-                                EdgeInsets.only(top: 20, left: 20, bottom: 20),
-                            child: Row(
-                              children: <Widget>[
-                                SubscribePrice(
-                                  price: widget.subscription.pricePerMonth,
-                                  annual: widget.subscription.annual,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ))
-                ],
+        child: Container(
+          height: 320,
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text('Employee', style: TextStyle(color: Colors.grey[500], fontSize: 22)),
+              SizedBox(height: 20,),
+              Text('\$19/mo (per employee)', style: TextStyle(color: Colors.black87, fontSize: 24, fontWeight: FontWeight.bold),),
+              SizedBox(height: 20),
+              Container(decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey[700])),),),
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.all(14),
+                child: Text('pay per month per registered and active employee', style: TextStyle(color: Colors.white, fontSize: 18),),
+                decoration: BoxDecoration(color: Colors.blueGrey[200], borderRadius: BorderRadius.circular(10)),
               ),
-            )
-          ]),
+              SizedBox(height: 30),
+              Container(
+                padding: EdgeInsets.all(20),
+                child: Text('ONE EMPLOYEE FOR FREE', style: TextStyle(color: Colors.white, fontSize: 16),),
+                decoration: BoxDecoration(color: Colors.blue[900], borderRadius: BorderRadius.circular(2)),
+              ),
+            ],
+          ),
         ),
       ),
     );
