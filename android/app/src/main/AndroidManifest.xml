@@ -14,7 +14,7 @@
          <uses-feature android:name="android.hardware.camera.flash" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="work_witness"
+        android:label="work witness"
         android:icon="@mipmap/launcher_icon">
 
         <meta-data android:name="com.google.android.geo.API_KEY"
