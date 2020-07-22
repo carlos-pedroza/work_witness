@@ -110,8 +110,8 @@ class _CheckInState extends State<CheckIn> {
 
   setPosition() {
     StreamSubscription<Position> positionStream = geolocator
-        .getPositionStream(locationOptions)
-        .listen((Position position) {
+    .getPositionStream(locationOptions)
+    .listen((Position position) {
       setState(() {
         _localitation = Localitation(
             latitude: position.latitude,
@@ -124,7 +124,14 @@ class _CheckInState extends State<CheckIn> {
           });
         });
       });
-    });
+    },
+    onError: (e) {
+      setState(() {
+        loading = false;
+        blocked = true;
+      });
+    }
+    );
   }
 
   void check() {
@@ -186,26 +193,35 @@ class _CheckInState extends State<CheckIn> {
   }
 
   void setTimer() {
-    setState(() {
-      _now = DateTime.now();
-      if (counter == 550) {
-        StreamSubscription<Position> positionStream = geolocator
-            .getPositionStream(locationOptions)
-            .listen((Position position) {
-          setState(() {
-            _localitation = Localitation(
-                latitude: position.latitude,
-                longitude: position.longitude,
-                register: DateTime.now());
-            Controller.setLocalitation(_localitation);
+    if (!blocked) {
+      setState(() {
+        _now = DateTime.now();
+        if (counter == 300) {
+          StreamSubscription<Position> positionStream = geolocator
+              .getPositionStream(locationOptions)
+          .listen((Position position) {
+            setState(() {
+              _localitation = Localitation(
+                  latitude: position.latitude,
+                  longitude: position.longitude,
+                  register: DateTime.now());
+              Controller.setLocalitation(_localitation);
 
-            loading = false;
-          });
-        });
-        counter = 0;
-      }
-      counter += 1;
-    });
+              loading = false;
+            });
+          },
+          onError: (e) {
+            setState(() {
+              loading = false;
+              blocked = true;
+            });
+          }
+          );
+          counter = 0;
+        }
+        counter += 1;
+      });
+    }
   }
 
   Future<bool> callBackPage() {
@@ -334,18 +350,45 @@ class _CheckInState extends State<CheckIn> {
   }
 
   Widget _body() {
-    if (widget.checkTypeEnum == CheckTypeEnum.CheckIn) {
-      if (widget.sendCheck != null) {
-        blocked = false;
-        return _content();
-      } else {
-        blocked = false;
-        return _content();
-      }
+    if (blocked == true) {
+      return blockedBody();
     } else {
-      blocked = false;
       return _content();
     }
+  }
+
+  Widget blockedBody() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+        child: Container(
+          height: 300,
+          width: 300,
+          child: Card(
+            elevation: 3,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text('For this function it is necessary to geolocalisation and have to have permissions for it, Thanks!', style: TextStyle(color: Colors.black87, fontSize: 22), textAlign: TextAlign.center,),
+                ),
+                SizedBox(height: 20),
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => Projects()));
+                  },
+                  child: Text('Back', style: TextStyle(color: Colors.white)),
+                  color: Theme.of(context).primaryColor,
+                ),
+            ],) 
+          ),
+        ),
+      ),
+    );
   }
 
   @override

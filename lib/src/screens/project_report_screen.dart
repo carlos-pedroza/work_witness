@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:work_witness/src/controller/controller.dart';
 import 'package:work_witness/src/controller/controlller_local.dart';
 import 'package:work_witness/src/controller/models/project.dart';
@@ -11,7 +10,6 @@ import 'package:work_witness/src/controller/models/project_report.dart';
 import 'package:work_witness/src/controller/models/project_report_photo.dart';
 import 'package:work_witness/src/controller/models/project_report_question.dart';
 import 'package:work_witness/src/controller/models/project_type_question.dart';
-import 'package:work_witness/src/controller/setting.dart';
 import 'package:work_witness/src/screens/project_report_photo_camara_screen.dart';
 import 'package:work_witness/src/widgets/button-circular.dart';
 import 'package:work_witness/src/widgets/loading_Indicator.dart';
@@ -112,7 +110,7 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                 ),
               )
             : Container(),
-        SizedBox(width: 10),
+        SizedBox(width: 20),
         !loading
             ? Container(
                 width: 110,
@@ -139,8 +137,15 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
   }
 
   Widget content() {
-    return !selectProjectType
-        ? Container(
+    double _botonSize = 60;
+    double _iconSize = 40;
+    bool _isTablet = false; 
+    if (MediaQuery.of(context).size.width>700&&MediaQuery.of(context).size.height>700) {
+      _isTablet = true;
+      _botonSize = 100;
+      _iconSize = 60;
+    }
+    return Container(
             child: !showPhotos
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -196,9 +201,9 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                               icon: !showPhotos
                                   ? Icons.camera_alt
                                   : Icons.arrow_back_ios,
-                              buttomSize: 50,
-                              iconSize: 30,
-                              loadingSize: 30,
+                              buttomSize: _botonSize,
+                              iconSize: _iconSize,
+                              loadingSize: _iconSize,
                               tap: () {
                                 setState(() {
                                   showPhotos = !showPhotos;
@@ -226,9 +231,9 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                             icon: !showPhotos
                                 ? Icons.camera_alt
                                 : Icons.arrow_back_ios,
-                            buttomSize: 50,
-                            iconSize: 30,
-                            loadingSize: 30,
+                            buttomSize: _botonSize,
+                            iconSize: _iconSize,
+                            loadingSize: _iconSize,
                             tap: () {
                               setState(() {
                                 showPhotos = !showPhotos;
@@ -248,8 +253,100 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                           }),
                     ),
                   ]),
-          )
-        : getListProjectType();
+          );
+  }
+
+  Widget contentLandScapeTablet() {
+    return Container(
+      color: Colors.white70,
+      padding: EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+        Container(
+          color: Theme.of(context).primaryColor,
+          padding: EdgeInsets.all(10),
+          height: MediaQuery.of(context).size.height - 80,
+          width: (MediaQuery.of(context).size.width / 2) - 60,
+          child: ListView.builder(
+                    itemCount: widget
+                        .projectReport.projectReportQuestions.length,
+                    itemBuilder: (BuildContext context, int i) {
+                      Widget questionBox = QuestionBox(
+                          projectReport: widget.projectReport,
+                          projectReportQuestion: widget
+                              .projectReport.projectReportQuestions[i]);
+                      if (i == 0) {
+                        return Column(children: <Widget>[
+                          SizedBox(height: 10),
+                          hoursMinutes(),
+                          questionBox,
+                        ]);
+                      }
+                      if ((i + 1) ==
+                          widget.projectReport.projectReportQuestions
+                              .length) {
+                        return Column(
+                          children: <Widget>[
+                            questionBox,
+                            SizedBox(
+                              height: 100,
+                            ),
+                          ],
+                        );
+                      } else {
+                        return questionBox;
+                      }
+                    },
+                  ),
+        ),
+        SizedBox(width: 10),
+        Container(
+          color: Theme.of(context).primaryColor,
+          padding: EdgeInsets.all(10),
+          height: MediaQuery.of(context).size.height - 80,
+          width: (MediaQuery.of(context).size.width / 2) - 70,
+          child: ProjectReportPhotoScreen(
+              projectReport: widget.projectReport,
+              tookPhoto: (bool result) {
+                setState(() {
+                  hasPhoto = result;
+                });
+              }),
+        ),
+      ],),
+    );
+  }
+
+  Widget contentResponsive() {
+    if(!selectProjectType) {
+      if (MediaQuery.of(context).orientation == Orientation.landscape && MediaQuery.of(context).size.height>700) {
+        return Container(
+          padding: EdgeInsets.only(top:60, left: 40, right: 40, bottom: 120),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: contentLandScapeTablet()
+        );
+      } else {
+        return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        color: Theme.of(context).primaryColor,
+                        padding: EdgeInsets.only(left: 10),
+                        child: content(),
+                      ),
+                    )
+                  ],
+                );
+      }
+    } else {
+      return getListProjectType();
+    }
   }
 
   void onSave() {
@@ -278,20 +375,7 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
   }
 
   Widget body() {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Expanded(
-          child: Container(
-            color: Theme.of(context).primaryColor,
-            padding: EdgeInsets.only(left: 10),
-            child: !loading ? content() : LoadingIndicator(size: 40),
-          ),
-        )
-      ],
-    );
+    return !loading ? contentResponsive() : LoadingIndicator(size: 40);
   }
 
   Widget getListProjectType() {
@@ -408,7 +492,7 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
                     children: <Widget>[
                       ButtonCircular(
                         loading: false,
-                        color: Theme.of(context).primaryColorDark,
+                        color: Colors.blue,
                         textColor: Theme.of(context).textTheme.bodyText1.color,
                         icon: Icons.check,
                         buttomSize: 70,
@@ -510,18 +594,24 @@ class _ProjectReportPhotoScreenState extends State<ProjectReportPhotoScreen> {
     setState(() {
       loadingCamara = true;
     });
-    final _cameras = await availableCameras();
-    if (_cameras.length > 0) {
-      cameras = _cameras;
-      firstCamera = _cameras.first;
-      setState(() {
-        loadingCamara = false;
-      });
-    } else {
+    try {
+      final _cameras = await availableCameras();
+      if (_cameras.length > 0) {
+        cameras = _cameras;
+        firstCamera = _cameras.first;
+        setState(() {
+          loadingCamara = false;
+        });
+      } else {
+        setState(() {
+          showCamara = false;
+        });
+      }
+    } catch(ex) {
       setState(() {
         showCamara = false;
       });
-    }
+    } 
   }
 
   void deleteProjectReportPhotoConfirm(ProjectReportPhoto projectReportPhotos) {
@@ -596,151 +686,132 @@ class _ProjectReportPhotoScreenState extends State<ProjectReportPhotoScreen> {
     );
   }
 
-  Widget content() {
+  Widget contentTakePic() {
     return Container(
-      color: Theme.of(context).cardTheme.color,
-      child: Stack(
+      width: double.infinity,
+      height: double.infinity,
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(40),
-            child: Center(
-              child: showCamara
-                  ? Text('PHOTOS')
-                  : Text(
-                      'Your device do not have any camera device, for this reason, you cannot add any photos!',
-                      style: TextStyle(color: Colors.red),
-                    ),
-            ),
-          ),
-          showCamara
-              ? ListView.builder(
-                  itemCount: widget.projectReport.projectReportPhotos.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (!widget
-                        .projectReport.projectReportPhotos[index].disabled) {
-                      return Container(
-                        padding: EdgeInsets.all(16),
-                        child: Stack(
-                          children: <Widget>[
-                            photo(index),
-                            Container(
-                              margin:
-                                  EdgeInsets.only(top: 10, left: 10, right: 10),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Latitude: ',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      backgroundColor: Theme.of(context)
-                                          .primaryColorDark
-                                          .withOpacity(0.8),
+        Expanded(
+          child: Container(
+            color: Theme.of(context).accentColor,
+            padding: EdgeInsets.all(6),
+            child: ListView.builder(
+                    itemCount: widget.projectReport.projectReportPhotos.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (!widget
+                          .projectReport.projectReportPhotos[index].disabled) {
+                        return Container(
+                          padding: EdgeInsets.all(16),
+                          child: Stack(
+                            children: <Widget>[
+                              photo(index),
+                              Container(
+                                margin:
+                                    EdgeInsets.only(top: 10, left: 10, right: 10),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'Latitude: ',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        backgroundColor: Theme.of(context)
+                                            .primaryColorDark
+                                            .withOpacity(0.8),
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    widget.projectReport
-                                        .projectReportPhotos[index].latitude
-                                        .toString(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      backgroundColor: Theme.of(context)
-                                          .primaryColorDark
-                                          .withOpacity(0.8),
+                                    Text(
+                                      widget.projectReport
+                                          .projectReportPhotos[index].latitude
+                                          .toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        backgroundColor: Theme.of(context)
+                                            .primaryColorDark
+                                            .withOpacity(0.8),
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    'longitude: ',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      backgroundColor: Theme.of(context)
-                                          .primaryColorDark
-                                          .withOpacity(0.8),
+                                    Text(
+                                      'longitude: ',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        backgroundColor: Theme.of(context)
+                                            .primaryColorDark
+                                            .withOpacity(0.8),
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    widget.projectReport
-                                        .projectReportPhotos[index].longitude
-                                        .toString(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      backgroundColor: Theme.of(context)
-                                          .primaryColorDark
-                                          .withOpacity(0.8),
+                                    Text(
+                                      widget.projectReport
+                                          .projectReportPhotos[index].longitude
+                                          .toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        backgroundColor: Theme.of(context)
+                                            .primaryColorDark
+                                            .withOpacity(0.8),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Positioned(
-                              top: 10,
-                              right: 10,
-                              child: !widget.projectReport.isSended
-                                  ? IconButton(
-                                      icon: Icon(Icons.delete_forever,
-                                          color: Colors.white, size: 34),
-                                      onPressed: () {
-                                        deleteProjectReportPhotoConfirm(widget
-                                            .projectReport
-                                            .projectReportPhotos[index]);
-                                      },
-                                    )
-                                  : Container(),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
-                )
-              : SizedBox(),
-          showCamara
-              ? Positioned(
-                  bottom: 40,
-                  left: 0,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 80),
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          child: !loadingCamara
-                              ? (!widget.projectReport.isSended
-                                  ? ButtonCircular(
-                                      loading: loadingCamara,
-                                      color: Theme.of(context).primaryColor,
-                                      textColor: Colors.white,
-                                      icon: Icons.camera,
-                                      buttomSize: 80,
-                                      iconSize: 48,
-                                      loadingSize: 10,
-                                      tap: takePhoto,
-                                    )
-                                  : Container())
-                              : LoadingIndicator(
-                                  size: 40,
+                                  ],
                                 ),
-                        ),
-                      ],
-                    ),
+                              ),
+                              Positioned(
+                                top: 10,
+                                right: 10,
+                                child: !widget.projectReport.isSended
+                                    ? IconButton(
+                                        icon: Icon(Icons.delete_forever,
+                                            color: Colors.white, size: 34),
+                                        onPressed: () {
+                                          deleteProjectReportPhotoConfirm(widget
+                                              .projectReport
+                                              .projectReportPhotos[index]);
+                                        },
+                                      )
+                                    : Container(),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
                   ),
-                )
-              : SizedBox(),
-        ],
-      ),
+          ),
+        ),
+        !widget.projectReport.isSended
+        ? Container(
+          color: Colors.blue[300],
+          padding: EdgeInsets.only(top:20, bottom: 20),
+          width: double.infinity,
+          child: ButtonCircular(
+              loading: loadingCamara,
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
+              icon: Icons.camera,
+              buttomSize: 80,
+              iconSize: 48,
+              loadingSize: 10,
+              tap: takePhoto,
+            ),
+        )
+        : Container()
+      ],),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return content();
+    return contentTakePic();
   }
 }

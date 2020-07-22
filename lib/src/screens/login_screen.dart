@@ -17,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String appVersion = '1.4.0';
   bool _firstStep = true;
   String _email;
   String _password;
@@ -79,10 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.only(bottom: 20),
                     child: Text(
                       title,
-                      style: TextStyle(
-                          color: Colors.blueGrey[800],
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
+                      style: MediaQuery.of(context).size.width <= 700 
+                      ? TextStyle(color: Colors.blueGrey[800],fontSize: 24,fontWeight: FontWeight.bold) 
+                      : TextStyle(color: Colors.blueGrey[800],fontSize: 40,fontWeight: FontWeight.bold) ,
                     ),
                   )
                 : Container(),
@@ -162,9 +162,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: MediaQuery.of(context).size.width <= 700 ? 2 : 4,
               child: Container(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width <= 700 ? MediaQuery.of(context).size.width : 700,
                 color: Theme.of(context).primaryColor,
                 child: Image.asset(
                   'assets/images/logo_t.png',
@@ -174,11 +174,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Container(
               color: Theme.of(context).primaryColor,
-              padding: EdgeInsets.all(6),
+              padding: MediaQuery.of(context).size.width <= 700 ? EdgeInsets.all(6) : EdgeInsets.only(top: 100),
               child: Center(
                 child: Text(
-                  '1.3.1',
-                  style: TextStyle(color: Colors.grey[800], fontSize: 12),
+                  appVersion,
+                  style: MediaQuery.of(context).size.width <= 700 ? TextStyle(color: Colors.grey[800], fontSize: 12) : TextStyle(color: Colors.grey[800], fontSize: 22),
                 ),
               ),
             ),
@@ -186,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
               flex: 7,
               child: Container(
                 color: Colors.white54,
-                padding: EdgeInsets.only(top: 20),
+                padding: MediaQuery.of(context).size.width <= 700 ? EdgeInsets.only(top: 20) : EdgeInsets.only(top:80, left: 100, right: 100),
                 child: logEmail(context, 'Welcome!'),
               ),
             ),
@@ -196,12 +196,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget smallHorizontal() {
-    return SingleChildScrollView(
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
+  Widget loginContainerSm() {
+    return Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -214,7 +210,34 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ],
-        ),
+        );
+  }
+
+  Widget loginContainerLg() {
+    return Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('WORK WITNESS', style: TextStyle(color: Theme.of(context).primaryColorDark, fontSize: 52)),
+            SizedBox(height: 40),
+            Container(
+              color: Colors.white54,
+              width: 700,
+              height: 400,
+              padding:
+                  EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 0),
+              child: logEmail(context, 'Welcome'),
+            ),
+          ],
+        );
+  }
+
+  Widget smallHorizontal() {
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: MediaQuery.of(context).size.height <= 700 ? loginContainerSm() : loginContainerLg(),
       ),
     );
   }
@@ -288,20 +311,20 @@ class _LoginScreenState extends State<LoginScreen> {
             .then((Subtoken result) {
           setState(() {
             hideLoading();
-            if (result != null) {
-              if (result.isAccount && !result.active) {
-                activeProblem(context);
-              } else {
-                Controller.setEmail(_email.toLowerCase());
-                setState(() {
-                  _firstStep = false;
-                  _password = '';
-                });
-              }
-            } else {
-              Utils.showError(context, 'The email is not valid!');
-            }
           });
+          if (result != null) {
+            if (result.isAccount && !result.active) {
+              activeProblem(context);
+            } else {
+              Controller.setEmail(_email.toLowerCase());
+              setState(() {
+                _firstStep = false;
+                _password = '';
+              });
+            }
+          } else {
+            Utils.showError(context, 'The email is not valid!');
+          }
         });
       }
     } else {
@@ -330,15 +353,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget drawScreen() {
-    if (MediaQuery.of(context).orientation == Orientation.portrait &&
-        MediaQuery.of(context).size.width < 700.0) {
+    if (MediaQuery.of(context).orientation == Orientation.portrait) {
       return smallVertical();
-    } else if (MediaQuery.of(context).orientation == Orientation.landscape &&
-        MediaQuery.of(context).size.width < 800) {
+    } else if (MediaQuery.of(context).orientation == Orientation.landscape) {
       return smallHorizontal();
-    } else {
-      return tablet();
-    }
+    } 
   }
 
   void openDialogNoConnection() {

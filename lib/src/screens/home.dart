@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
       onWillPop: onBack,
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        backgroundColor: Theme.of(context).primaryColorDark,
+        backgroundColor: Theme.of(context).primaryColor,
         body: LoginScreen(),
       ),
     );

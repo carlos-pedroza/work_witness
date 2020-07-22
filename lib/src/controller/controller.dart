@@ -16,7 +16,6 @@ import 'package:work_witness/src/controller/models/token.dart';
 import 'package:work_witness/src/controller/models/employee.dart';
 import './dal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'models/project.dart';
 import 'models/project_report.dart';
 import 'models/query_result.dart';
@@ -29,6 +28,7 @@ class Controller {
 
   static Future<Subtoken> loginEmailEmployee(String email) async {
     return Dal.loginEmailEmployee(email).then((Subtoken subtoken) {
+      var sub = subtoken;
       return SharedPreferences.getInstance().then((SharedPreferences prefs) {
         prefs.setString(Controller._subtokenPref, subtoken.key);
         return subtoken;
