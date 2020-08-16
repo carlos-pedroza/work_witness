@@ -200,13 +200,12 @@ class _CheckInState extends State<CheckIn> {
           StreamSubscription<Position> positionStream = geolocator
               .getPositionStream(locationOptions)
           .listen((Position position) {
+            _localitation = Localitation(
+                latitude: position.latitude,
+                longitude: position.longitude,
+                register: DateTime.now());
+            Controller.setLocalitation(_localitation);
             setState(() {
-              _localitation = Localitation(
-                  latitude: position.latitude,
-                  longitude: position.longitude,
-                  register: DateTime.now());
-              Controller.setLocalitation(_localitation);
-
               loading = false;
             });
           },

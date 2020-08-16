@@ -26,8 +26,8 @@ class SendCheck {
       idProject: json["idProject"],
       idEmployee: json["idEmployee"],
       idCheckType: json["idCheckType"],
-      longitude: json["longitude"],
-      latitude: json["latitude"],
+      longitude: json["longitude"]==0 ? 0.0 : json["longitude"],
+      latitude: json["latitude"]==0 ? 0.0 : json["latitude"],
       value: DateTime.parse(json["value"]),
     );
   }

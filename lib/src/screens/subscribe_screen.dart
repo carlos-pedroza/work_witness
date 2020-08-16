@@ -8,9 +8,9 @@ class SubscribeScreen extends StatefulWidget {
 
 class _SubscribeScreenState extends State<SubscribeScreen> {
   List<String> introduction = [
-    'You are an individual or professional worker, you take you a long time to collect information and photos of your work done, you can reduce time and generate your reports automatically  to inform your clients using Work-Witness.',
-    'You are a company that have a lot of employees, you can generate their reports and evidence of the work is not always an easy task, especially if they do their work in the clients\' offices, the supervision on time is very important and the control of the hours worked, schedules and absenteeism it is necessary. Work-witness provides you with the essential tools to take full control of the workers who perform their work in your clients\' offices remotely.',
-    'You are a cooperative, being able to manage the work of different companies and their multiple employees without losing control is a challenge, for this reason, having technological tools to support you in this essential task is very important. Try Work-Witness and get support with this great tool to control your projects easily and efficiently.'
+    'You are a company with many employees but generating their reports and showing proof of their work is not easy task, especially if they work at a client’s office, where the supervision of hours worked, schedules, attendance, and punctuality are detrimental to the client’s service. Work-Witness provides you with the essential tools to best manage your employees time and reports as they work at the client’s offices or remotely.',
+    'If you are a corporation, being able to manage the work of different companies and their multiple employees without losing control is a challenge, to say the least. For this reason, it is vital to have strategic tools to support you in this rather important task. Try Work-Witness to lead your projects smartly and more efficiently.',
+    'As a field or professional worker, it takes you a significant amount of time to collect information and photos of your work to build reports. You can now reduce time and be more effective by generating reports automatically to keep your clients informed by using Work-Witness.'
   ];
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IntroductionText(
-                    icon: Icons.person,
+                    icon: Icons.business,
                     caption: introduction[0],
                     onTap: () {
                       goNext();
@@ -114,7 +114,7 @@ class _SubscribeScreenState extends State<SubscribeScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IntroductionText(
-                    icon: Icons.business,
+                    icon: Icons.person,
                     caption: introduction[2],
                     onTap: () {
                       goNext();

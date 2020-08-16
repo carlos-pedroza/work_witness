@@ -350,28 +350,27 @@ class _ProjectReportScreenState extends State<ProjectReportScreen> {
   }
 
   void onSave() {
-    var projectReportQuestion = widget.projectReport.projectReportQuestions
-        .firstWhere((e) => e.idProjectTypeQuestion == null);
+    var projectReportQuestion = widget.projectReport.projectReportQuestions.firstWhere((e) => e.idProjectTypeQuestion == null);
     widget.projectReport.description = projectReportQuestion.value;
     widget.projectReport.projectReportQuestions.remove(projectReportQuestion);
     setState(() {
       loading = true;
-      if (widget.projectReport.id == null) {
-        widget.controllerLocal
-            .insertProjectReport(widget.projectReport)
-            .then((value) {
-          loading = false;
-          Navigator.of(context).pop();
-        });
-      } else {
-        widget.controllerLocal
-            .updateProjectReport(widget.projectReport)
-            .then((value) {
-          loading = false;
-          Navigator.of(context).pop();
-        });
-      }
     });
+    if (widget.projectReport.id == null) {
+      widget.controllerLocal
+          .insertProjectReport(widget.projectReport)
+          .then((value) {
+        loading = false;
+        Navigator.of(context).pop();
+      });
+    } else {
+      widget.controllerLocal
+          .updateProjectReport(widget.projectReport)
+          .then((value) {
+        loading = false;
+        Navigator.of(context).pop();
+      });
+    }
   }
 
   Widget body() {
@@ -601,14 +600,17 @@ class _ProjectReportPhotoScreenState extends State<ProjectReportPhotoScreen> {
         firstCamera = _cameras.first;
         setState(() {
           loadingCamara = false;
+          showCamara = true;
         });
       } else {
         setState(() {
+          loadingCamara = false;
           showCamara = false;
         });
       }
     } catch(ex) {
       setState(() {
+        loadingCamara = false;
         showCamara = false;
       });
     } 
@@ -700,7 +702,7 @@ class _ProjectReportPhotoScreenState extends State<ProjectReportPhotoScreen> {
           child: Container(
             color: Theme.of(context).accentColor,
             padding: EdgeInsets.all(6),
-            child: ListView.builder(
+            child: showCamara ? ListView.builder(
                     itemCount: widget.projectReport.projectReportPhotos.length,
                     itemBuilder: (BuildContext context, int index) {
                       if (!widget
@@ -786,10 +788,10 @@ class _ProjectReportPhotoScreenState extends State<ProjectReportPhotoScreen> {
                         return Container();
                       }
                     },
-                  ),
+                  ): Center(child: Text('No camera available!'),),
           ),
         ),
-        !widget.projectReport.isSended
+        !widget.projectReport.isSended&&showCamara
         ? Container(
           color: Colors.blue[300],
           padding: EdgeInsets.only(top:20, bottom: 20),

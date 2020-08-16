@@ -41,10 +41,6 @@ class _ProjectReportsState extends State<ProjectReports> {
   bool loading2 = false;
   List<ProjectReport> projectReports = List<ProjectReport>();
 
-  var geolocator = Geolocator();
-  var locationOptions =
-      LocationOptions(accuracy: LocationAccuracy.medium, distanceFilter: 10);
-
   Future<List<ProjectReportQuestion>> getProjectReportQuestions(
       int idProjectReport) async {
     return _controllerLocal
@@ -427,42 +423,55 @@ class _ProjectReportsState extends State<ProjectReports> {
     }
   }
 
-  Future<Position> setLocalitationGeoposition() async {
-    Position _position;
+  Future<Map<String, double>> setLocalitationGeoposition() async {
+    Map<String, double> _position;
+    var geolocator = Geolocator();
+    var locationOptions = LocationOptions(accuracy: LocationAccuracy.medium, distanceFilter: 10);
     StreamSubscription<Position> positionStream = geolocator
         .getPositionStream(locationOptions)
-        .listen((Position position) {
-      _position = position;
-    });
+    .listen((Position position) {
+      _position = {
+        "latitude": position.latitude,
+        "longitude": position.longitude
+      };
+    },
+    onError: (e)=>throw Exception('no gps'));
+
     return _position;
   }
 
   Future<Localitation> getLocalitation() async {
     Localitation __localitation = await Controller.getLocalitation();
     if (__localitation == null) {
-      final position = await setLocalitationGeoposition();
-      return Localitation(
-        latitude: position.latitude,
-        longitude: position.longitude,
-        register: DateTime.now(),
-      );
+      setLocalitationGeoposition().then((position) {
+        return Localitation(
+          latitude: position['latitude'],
+          longitude: position['longitude'],
+          register: DateTime.now(),
+        );
+      })
+      .catchError((e)=>throw e);
     } else {
       if (!__localitation.expired()) {
         return __localitation;
       } else {
-        final position = await setLocalitationGeoposition();
-        return Localitation(
-          latitude: position.latitude,
-          longitude: position.longitude,
-          register: DateTime.now(),
-        );
+        setLocalitationGeoposition()
+        .then((position) {
+          return Localitation(
+            latitude: position['latitude'],
+            longitude: position['longitude'],
+            register: DateTime.now(),
+          );
+        })
+        .catchError((e)=>throw e);
       }
     }
   }
 
   Future<void> insertBreakPoint(DateTime _now, CheckTypeEnum _checkType) async {
-    Localitation _localitation = await getLocalitation();
-    return Controller.check(
+    return getLocalitation()
+    .then((Localitation _localitation) {
+      return Controller.check(
       SendCheck(
         id: null,
         idProject: widget.project.id,
@@ -471,27 +480,29 @@ class _ProjectReportsState extends State<ProjectReports> {
         latitude: _localitation.latitude,
         longitude: _localitation.longitude,
         value: _now,
-      ),
-    );
+      ));
+    });
   }
 
   void startBreakTime() {
-    loading = true;
+    setState(() {
+      widget.isBreakTime = true;
+    });
     var _now = DateTime.now();
     insertBreakPoint(_now, CheckTypeEnum.BreakTimeStart).then((_) {
       setState(() {
-        widget.isBreakTime = true;
         loading = false;
       });
     });
   }
 
   void endBreakTime() {
-    loading = true;
+    setState(() {
+      widget.isBreakTime = false;
+    });
     var _now = DateTime.now();
     insertBreakPoint(_now, CheckTypeEnum.BreakTimeEnd).then((_) {
       setState(() {
-        widget.isBreakTime = false;
         loading = false;
       });
     });
@@ -740,7 +751,9 @@ class _ProjectReportsState extends State<ProjectReports> {
   void initState() {
     loading = false;
     getControllerLocal().then((_) {
-      readProjectReports().then((_) => syncProjectCloud());
+      readProjectReports().then((_) {
+        //syncProjectCloud();
+      });
     });
     super.initState();
   }

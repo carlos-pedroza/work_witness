@@ -154,7 +154,7 @@ class _SubscribeAccountScreenState extends State<SubscribeAccountScreen> {
                   onPressed: () {
                     onSubscribe(context);
                   },
-                  child: Text('subscribe it',
+                  child: Text('register now',
                       style: Theme.of(context).textTheme.bodyText1),
                 ),
               ),
@@ -181,6 +181,19 @@ class _AccountItemState extends State<AccountItem> {
     return Container(
       padding: EdgeInsets.only(top: 10, left: 20, right: 20),
       child: ListView(children: <Widget>[
+          Card(
+            color: Colors.yellowAccent[100],
+            elevation: 5,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Text('one employee/user not cost forever!', style: TextStyle(color: Theme.of(context).primaryColorDark, fontSize: 18), textAlign: TextAlign.center,),
+                  Text('the first month free of charge, at the end you have no purchase commitment!', style: TextStyle(color: Theme.of(context).primaryColorDark, fontSize: 16), textAlign: TextAlign.center,),
+                ],
+              ),
+            ),
+          ),
           InkWell(
               onTap: () {
                 setState(() {

@@ -37,6 +37,9 @@ class ProjectReportItem extends StatelessWidget {
       child: Container(
         color: Colors.white,
         child: ListTile(
+          onTap: () {
+            showProjectReport(projectReport);
+          },
           leading: Icon(Icons.assignment),
           title: Column(
             mainAxisAlignment: MainAxisAlignment.start,

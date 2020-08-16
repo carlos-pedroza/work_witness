@@ -7,6 +7,7 @@ import 'package:work_witness/src/controller/utils.dart';
 import 'package:work_witness/src/screens/projects.dart';
 import 'package:work_witness/src/screens/subscribe_screen.dart';
 import 'package:work_witness/src/widgets/button-circular.dart';
+import 'package:work_witness/src/widgets/loading_Indicator.dart';
 import '../controller/controller.dart';
 import '../controller/models/subtoken.dart';
 import 'package:connectivity/connectivity.dart';
@@ -17,7 +18,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String appVersion = '1.4.0';
+  String appVersion = '1.4.3';
+  
+  final _formEmailKey = GlobalKey<FormState>();
+  final _formPasswordKey = GlobalKey<FormState>();
+
   bool _firstStep = true;
   String _email;
   String _password;
@@ -29,248 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   hideLoading() {
     loading = false;
-  }
-
-  Widget subscribe() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
-          child: Text(
-            'you don\'t have an account, \n subscribe it, it\'s free',
-            style: TextStyle(
-                color: Theme.of(context).primaryColorDark, fontSize: 18),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(bottom: 4, left: 20, right: 20),
-          child: OutlineButton(
-            padding: EdgeInsets.all(20),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SubscribeScreen(),
-                ),
-              );
-            },
-            child: Text('subscribe',
-                style: TextStyle(color: Colors.green[800], fontSize: 22)),
-            textColor: Colors.green[800],
-            color: Colors.green[800],
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget logEmail(BuildContext context, String title) {
-    return Container(
-        margin: EdgeInsets.only(left: 10, right: 10),
-        padding: EdgeInsets.only(top: 10, bottom: 20),
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            title != ''
-                ? Container(
-                    padding: EdgeInsets.only(bottom: 20),
-                    child: Text(
-                      title,
-                      style: MediaQuery.of(context).size.width <= 700 
-                      ? TextStyle(color: Colors.blueGrey[800],fontSize: 24,fontWeight: FontWeight.bold) 
-                      : TextStyle(color: Colors.blueGrey[800],fontSize: 40,fontWeight: FontWeight.bold) ,
-                    ),
-                  )
-                : Container(),
-            Container(
-              padding: EdgeInsets.all(10),
-              color: Theme.of(context).primaryColorDark,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 8,
-                    child: Container(
-                      color: Colors.white60,
-                      child: _firstStep
-                          ? TextFormField(
-                              key: UniqueKey(),
-                              textCapitalization: TextCapitalization.none,
-                              initialValue: _email,
-                              obscureText: false,
-                              keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                focusColor: Colors.white,
-                                border: OutlineInputBorder(),
-                                hintText: 'email',
-                              ),
-                              onChanged: (_value) {
-                                _email = _value;
-                              },
-                            )
-                          : TextFormField(
-                              key: UniqueKey(),
-                              initialValue: _password,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'password',
-                              ),
-                              onChanged: (_value) {
-                                _password = _value;
-                              },
-                            ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: ButtonCircular(
-                      loading: loading,
-                      color: Theme.of(context).primaryColor,
-                      textColor: Colors.white,
-                      icon: Icons.navigate_next,
-                      buttomSize: 40,
-                      iconSize: 24,
-                      loadingSize: 10,
-                      tap: onLogin,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _firstStep ? subscribe() : Container(),
-          ],
-        ));
-  }
-
-  Widget smallVertical() {
-    return SingleChildScrollView(
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: Container(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: MediaQuery.of(context).size.width <= 700 ? 2 : 4,
-              child: Container(
-                width: MediaQuery.of(context).size.width <= 700 ? MediaQuery.of(context).size.width : 700,
-                color: Theme.of(context).primaryColor,
-                child: Image.asset(
-                  'assets/images/logo_t.png',
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
-            ),
-            Container(
-              color: Theme.of(context).primaryColor,
-              padding: MediaQuery.of(context).size.width <= 700 ? EdgeInsets.all(6) : EdgeInsets.only(top: 100),
-              child: Center(
-                child: Text(
-                  appVersion,
-                  style: MediaQuery.of(context).size.width <= 700 ? TextStyle(color: Colors.grey[800], fontSize: 12) : TextStyle(color: Colors.grey[800], fontSize: 22),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 7,
-              child: Container(
-                color: Colors.white54,
-                padding: MediaQuery.of(context).size.width <= 700 ? EdgeInsets.only(top: 20) : EdgeInsets.only(top:80, left: 100, right: 100),
-                child: logEmail(context, 'Welcome!'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget loginContainerSm() {
-    return Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                color: Colors.white54,
-                padding:
-                    EdgeInsets.only(top: 80, left: 20, right: 20, bottom: 0),
-                child: logEmail(context, ''),
-              ),
-            ),
-          ],
-        );
-  }
-
-  Widget loginContainerLg() {
-    return Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('WORK WITNESS', style: TextStyle(color: Theme.of(context).primaryColorDark, fontSize: 52)),
-            SizedBox(height: 40),
-            Container(
-              color: Colors.white54,
-              width: 700,
-              height: 400,
-              padding:
-                  EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 0),
-              child: logEmail(context, 'Welcome'),
-            ),
-          ],
-        );
-  }
-
-  Widget smallHorizontal() {
-    return SingleChildScrollView(
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: MediaQuery.of(context).size.height <= 700 ? loginContainerSm() : loginContainerLg(),
-      ),
-    );
-  }
-
-  Widget tablet() {
-    return SingleChildScrollView(
-      child: Container(
-        height: MediaQuery.of(context).size.height - 80,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(
-              flex: 6,
-              child: Container(
-                color: Theme.of(context).primaryColor,
-                child: Image.asset(
-                  'assets/images/logo_t.png',
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Container(
-                width: 500,
-                color: Colors.white54,
-                padding: EdgeInsets.all(20),
-                child: logEmail(context, 'Work Witness, welcome!'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   void activeProblem(BuildContext context) {
@@ -301,63 +64,52 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  onLogin() {
-    if (_firstStep == true) {
-      if (_email.trim() != '') {
-        setState(() {
-          showLoading();
-        });
-        Controller.loginEmailEmployee(_email.toLowerCase())
-            .then((Subtoken result) {
+  verifyEmail() {
+    Controller.loginEmailEmployee(_email.toLowerCase())
+        .then((Subtoken result) {
+      if (result != null) {
+        if (result.isAccount && !result.active) {
           setState(() {
-            hideLoading();
+            loading = false;
           });
-          if (result != null) {
-            if (result.isAccount && !result.active) {
-              activeProblem(context);
-            } else {
-              Controller.setEmail(_email.toLowerCase());
-              setState(() {
-                _firstStep = false;
-                _password = '';
-              });
-            }
-          } else {
-            Utils.showError(context, 'The email is not valid!');
-          }
-        });
-      }
-    } else {
-      if (_password.trim() != '') {
+          activeProblem(context);
+        } else {
+          Controller.setEmail(_email.toLowerCase());
+          setState(() {
+            _firstStep = false;
+            _password = '';
+            loading = false;
+          });
+        }
+      } else {
         setState(() {
-          showLoading();
+          loading = false;
         });
-        Controller.getSubtoken().then((Subtoken subtoken) {
-          Controller.loginEmployee(subtoken, _password).then((bool result) {
-            setState(() {
-              hideLoading();
-              if (result) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => Projects(),
-                  ),
-                );
-              } else {
-                Utils.showError(context, 'The password is not valid!');
-              }
-            });
-          });
-        });
+        Utils.showError(context, 'The email is not valid!');
       }
-    }
+    });
   }
 
-  Widget drawScreen() {
-    if (MediaQuery.of(context).orientation == Orientation.portrait) {
-      return smallVertical();
-    } else if (MediaQuery.of(context).orientation == Orientation.landscape) {
-      return smallHorizontal();
-    } 
+  onLogin() {
+    setState(() {
+      showLoading();
+    });
+    Controller.getSubtoken().then((Subtoken subtoken) {
+      Controller.loginEmployee(subtoken, _password).then((bool result) {
+        setState(() {
+          hideLoading();
+          if (result) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => Projects(),
+              ),
+            );
+          } else {
+            Utils.showError(context, 'The password is not valid!');
+          }
+        });
+      });
+    });
   }
 
   void openDialogNoConnection() {
@@ -411,6 +163,143 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Widget emailForm() {
+    return Padding(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: Form(
+        key: _formEmailKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Welcome!', style: TextStyle(color: Colors.black54, fontSize: 22)),
+            SizedBox(height: 10),
+            TextFormField(
+              textCapitalization: TextCapitalization.none,
+              initialValue: _email,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                focusColor: Colors.white,
+                border: OutlineInputBorder(),
+                hintText: 'email',
+              ),
+              validator: (value) {
+                if (value.trim()=='') {
+                  return 'Please enter your email!';
+                } 
+                return null;
+              },
+              onSaved: (newValue) {
+                _email = newValue;
+              },
+              textInputAction: TextInputAction.go,
+              onFieldSubmitted: (value) {
+                var valid = _formEmailKey.currentState.validate();
+                if(valid) {
+                  setState(() {
+                    loading = true;
+                  });
+                  _formEmailKey.currentState.save();
+                  verifyEmail();
+                }  
+              },
+            ),
+            SizedBox(height: 10),
+            RaisedButton(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              color: Colors.lightBlue[700],
+              onPressed: () {
+                var valid = _formEmailKey.currentState.validate();
+                if(valid) {
+                  setState(() {
+                    loading = true;
+                  });
+                  _formEmailKey.currentState.save();
+                  verifyEmail();
+                }  
+              },
+              child: Text('Continue', style: TextStyle(color: Colors.white)),
+            ),
+            SizedBox(height: 20),
+            OutlineButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SubscribeScreen(),
+                  ),
+                );
+              },
+              child: Text('new user?, register here!',
+                  style: TextStyle(color: Colors.green[800])),
+              textColor: Colors.green[800],
+              color: Colors.green[800],
+            ),
+            Text(appVersion, style: TextStyle(color: Colors.black45, fontSize: 10),),
+          ],
+        )
+      ),
+    );
+  }
+
+  Widget passwordForm() {
+    return Padding(
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: Form(
+        key: _formPasswordKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+             Text('Welcome!', style: TextStyle(color: Colors.black54, fontSize: 22)),
+            SizedBox(height: 20),
+            TextFormField(
+              obscureText: true,
+              decoration: InputDecoration(
+                focusColor: Colors.white,
+                border: OutlineInputBorder(),
+                hintText: 'password',
+              ),
+              validator: (value) {
+                if (value.trim()=='') {
+                  return 'Please enter your password!';
+                } 
+                return null;
+              },
+              onSaved: (newValue) {
+                _password = newValue;
+              },
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (value) {
+                var valid = _formPasswordKey.currentState.validate();
+                if(valid) {
+                  setState(() {
+                    loading = true;
+                  });
+                  _formPasswordKey.currentState.save();
+                  onLogin();
+                }  
+              },
+            ),
+            SizedBox(height: 20),
+            RaisedButton(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              color: Colors.lightBlue[700],
+              onPressed: () {
+                var valid = _formPasswordKey.currentState.validate();
+                if(valid) {
+                  setState(() {
+                    loading = true;
+                  });
+                  _formPasswordKey.currentState.save();
+                  onLogin();
+                }  
+              },
+              child: Text('Sign in', style: TextStyle(color: Colors.white)),
+            )
+          ],
+        )
+      ),
+    );
+  }
+
   @override
   void initState() {
     Controller.getEmail().then((String _emailPref) {
@@ -421,9 +310,56 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
+  bool mediaLadscape() {
+    return (MediaQuery.of(context).orientation == Orientation.landscape);
+  }
+
   @override
   Widget build(BuildContext context) {
     validConnection(context);
-    return drawScreen();
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: !mediaLadscape() ? 40 : 16,
+              child: !mediaLadscape() ? 
+              Container(
+                color: Theme.of(context).primaryColor,
+                child: Image.asset(
+                  'assets/images/logo_t.png',
+                ),
+              )
+              : Center(
+                child: Container(
+                  padding: EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 10),
+                  child: Row(children: [
+                    Text('WORK WITNESS', style: TextStyle(color: Colors.white, fontSize: 20),),
+                    Text('v1.4.3', style: TextStyle(color: Colors.black45, fontSize: 10),),
+                  ],)
+                ),
+              ),
+            ),
+            Expanded(
+              flex: !mediaLadscape() ? 60 : 84,
+              child: Container(
+                color: Colors.white70,
+                child: Center(child:
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width > 500 ? 500 : MediaQuery.of(context).size.width-20,
+                    child: !loading ? (_firstStep ? emailForm() : passwordForm()) : LoadingIndicator(size: 40,),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

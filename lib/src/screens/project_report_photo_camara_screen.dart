@@ -36,7 +36,7 @@ class _ProjectReportPhotoCamaraState
   StreamSubscription _subscription;
   String _luxString = 'Unknown';
   Localitation localitation =
-      Localitation(latitude: 0, longitude: 0, register: null);
+      Localitation(latitude: 0.0, longitude: 0.0, register: DateTime.now());
   int photoCount = 1;
 
   void onData(int luxValue) async {

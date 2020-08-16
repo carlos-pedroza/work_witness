@@ -62,7 +62,7 @@ class _ProjectSetPhotoState extends State<ProjectSetPhoto> {
         LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
     StreamSubscription<Position> positionStream = geolocator
         .getPositionStream(locationOptions)
-        .listen((Position position) {
+    .listen((Position position) {
       setState(() {
         latitude = position.latitude.toString();
         longitude = position.longitude.toString();
@@ -70,6 +70,8 @@ class _ProjectSetPhotoState extends State<ProjectSetPhoto> {
         Controller.setLocalitation(widget.localitation);
         loading = false;
       });
+    },onError: (e) {
+       Navigator.of(context).pop(false);
     });
   }
 

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:work_witness/src/controller/models/subscribe_info.dart';
-import 'package:work_witness/src/controller/utils.dart';
 import 'package:work_witness/src/screens/subscribe_accounts.dart';
 
 class SubscribeFormularyScreen extends StatefulWidget {
@@ -13,6 +12,7 @@ class SubscribeFormularyScreen extends StatefulWidget {
 }
 
 class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
+  final _formKey = GlobalKey<FormState>();
   SubscribeInfo subscribeInfo = SubscribeInfo(
       name: '',
       company: '',
@@ -34,103 +34,24 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
     'You are a cooperative, being able to manage the work of different companies and their multiple employees without losing control is a challenge, for this reason, having technological tools to support you in this essential task is very important. Try Work-Witness and get support with this great tool to control your projects easily and efficiently.'
   ];
 
-  String valid() {
-    String result = '';
-
-    setState(() {
-      if (subscribeInfo.name.trim() == '') {
-        result = 'the name is required';
-        isNameError = true;
-      } else {
-        isNameError = false;
-      }
-      if (subscribeInfo.company.trim() == '') {
-        result += (result != '' ? ', ' : '') + 'the company is required';
-        isCompanyError = true;
-      } else {
-        isCompanyError = false;
-      }
-      subscribeInfo.email = subscribeInfo.email.toLowerCase().trim();
-      bool emailValid = RegExp(
-              r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-          .hasMatch(subscribeInfo.email);
-      if (!emailValid) {
-        result += (result != '' ? ', ' : '') + 'the email is invalid';
-        isEmailError = true;
-      } else {
-        if (subscribeInfo.email == '') {
-          result += (result != '' ? ', ' : '') + 'the email is required';
-          isEmailError = true;
-        } else {
-          isEmailError = false;
-        }
-      }
-      if (subscribeInfo.password.trim() == '') {
-        result += (result != '' ? ', ' : '') + 'the password is required';
-        isPasswordError = true;
-      } else if (subscribeInfo.password != confirm) {
-        result += (result != '' ? ', ' : '') +
-            'the password and confirm must be equal';
-        isPasswordError = true;
-      } else {
-        isPasswordError = false;
-      }
-      /*     if (terms) {
-        result += (result != '' ? ', ' : '') +
-            'you must accept terms and condition, and, privacy policy';
-      } */
-    });
-
-    return result;
-  }
-
   @override
   Widget build(BuildContext context) {
-    String validResult = '';
-    Future<bool> validDialog() {
-      return showDialog(
-        context: context,
-        builder: (context) => !Platform.isIOS
-            ? AlertDialog(
-                title: Text('incomplete!'),
-                content: Text('Please review: ' + validResult),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: Text('Ok')),
-                ],
-              )
-            : CupertinoAlertDialog(
-                title: Text('incomplete!'),
-                content: Text('Please review: ' + validResult),
-                actions: <Widget>[
-                  CupertinoDialogAction(
-                    isDefaultAction: true,
-                    child: new Text('Ok'),
-                    onPressed: () => Navigator.pop(context, false),
-                  ),
-                ],
-              ),
-      );
-    }
 
     void goNext() {
-      validResult = valid();
-      if (validResult == '') {
+      var valid = _formKey.currentState.validate();
+      if (valid == true) {
+        _formKey.currentState.save();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) =>
                 SubscribeAccountScreen(subscribeInfo: subscribeInfo),
           ),
         );
-      } else {
-        validDialog();
-      }
+      } 
     }
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColorDark.withOpacity(0.6),
@@ -147,137 +68,155 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
               Navigator.of(context).pop();
             }),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(top: 80),
-          height: MediaQuery.of(context).size.height - 80,
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            image: DecorationImage(
-              image: AssetImage("assets/images/logo_t.png"),
-              fit: BoxFit.none,
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                  child: Card(
-                margin: EdgeInsets.only(left: 0, right: 0),
-                child: Container(
-                  padding:
-                      EdgeInsets.only(top: 20, bottom: 0, left: 20, right: 20),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            'Please fill out the follow information!',
-                            style: Theme.of(context).textTheme.subtitle1,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor:
-                                !isNameError ? Colors.white : Colors.red[100],
-                            border: OutlineInputBorder(),
-                            hintText: 'Name',
-                          ),
-                          onChanged: (String value) {
-                            subscribeInfo.name = value;
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: !isCompanyError
-                                ? Colors.white
-                                : Colors.red[100],
-                            border: OutlineInputBorder(),
-                            hintText: 'Company',
-                          ),
-                          onChanged: (String value) {
-                            subscribeInfo.company = value;
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor:
-                                !isEmailError ? Colors.white : Colors.red[100],
-                            border: OutlineInputBorder(),
-                            hintText: 'Email',
-                          ),
-                          onChanged: (String value) {
-                            subscribeInfo.email = value;
-                          },
-                        ),
-                        SizedBox(height: 30),
-                        TextFormField(
-                          obscureText: true,
-                          keyboardType: TextInputType.visiblePassword,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: !isPasswordError
-                                ? Colors.white
-                                : Colors.red[100],
-                            border: OutlineInputBorder(),
-                            hintText: 'new password',
-                          ),
-                          onChanged: (String value) {
-                            subscribeInfo.password = value;
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: !isPasswordError
-                                ? Colors.white
-                                : Colors.red[100],
-                            border: OutlineInputBorder(),
-                            hintText: 'confirm password',
-                          ),
-                          onChanged: (String value) {
-                            confirm = value;
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'Privacy Policy and Terms and Conditions in: https://www.work-witness.app',
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        RaisedButton(
-                          color: Colors.green[800],
-                          padding: EdgeInsets.only(top: 20, left: 40, bottom: 20, right: 40),
-                          onPressed: goNext,
-                          child: Text('continue',
-                              style: Theme.of(context).textTheme.bodyText1),
-                        ),
-                        SizedBox(
-                          height: 300,
-                        ),
-                      ],
-                    ),
+      body: ListView(children: [
+        Card( 
+          margin: EdgeInsets.only(left: 0, right: 0),
+          child: Container(
+            padding: EdgeInsets.only(top: 20, bottom: 0, left: 20, right: 20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    'Please fill out the follow information!',
+                    style: Theme.of(context).textTheme.subtitle1,
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              )),
-            ],
+                TextFormField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    hintText: 'Name',
+                  ),
+                  validator: (value) {
+                    if (value.trim() == '') {
+                      return 'the name is required';
+                    }
+                    return null;
+                  },
+                  onSaved: (newValue) {
+                    subscribeInfo.name = newValue;
+                  },
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    hintText: 'Company',
+                  ),
+                  validator: (value) {
+                    if (value.trim() == '') {
+                      return 'the company is required';
+                    } 
+                    return null;
+                  },
+                  onSaved: (newValue) {
+                    subscribeInfo.company = newValue;
+                  },
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(),
+                    hintText: 'Email',
+                  ),
+                  validator: (value) {
+                    if (value.trim() == '') {
+                      return 'the email is required';
+                    }
+                    bool emailValid = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
+                        .hasMatch(value);
+                    if (!emailValid) {
+                      return 'the email is invalid';
+                    } 
+                    return null;                
+                  },
+                  onSaved: (newValue) {
+                    subscribeInfo.email = newValue;
+                  },
+                ),
+                SizedBox(height: 30),
+                TextFormField(
+                  obscureText: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: !isPasswordError
+                        ? Colors.white
+                        : Colors.red[100],
+                    border: OutlineInputBorder(),
+                    hintText: 'new password',
+                  ),
+                  validator: (value) {
+                    if (value.trim() == '') {
+                      return 'the password is required';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    subscribeInfo.password = value;
+                  },
+                  onSaved: (newValue) {
+                    subscribeInfo.password = newValue;
+                  },
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: !isPasswordError
+                        ? Colors.white
+                        : Colors.red[100],
+                    border: OutlineInputBorder(),
+                    hintText: 'confirm password',
+                  ),
+                  validator: (value) {
+                    if(value.trim() == '') {
+                      return 'must confirm the password';
+                    }
+                    if (subscribeInfo.password != value) {
+                      return 'the password, confirm must be equal';
+                    }
+                    return null;
+                  },
+                  onSaved: (newValue) {
+                    confirm = newValue;
+                  },
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Privacy Policy and Terms and Conditions in: https://www.work-witness.app',
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                RaisedButton(
+                  color: Colors.green[800],
+                  padding: EdgeInsets.only(top: 20, left: 40, bottom: 20, right: 40),
+                  onPressed: goNext,
+                  child: Text('continue',
+                      style: Theme.of(context).textTheme.bodyText1),
+                ),
+                SizedBox(
+                  height: 300,
+                ),
+              ]),
+            ),
           ),
         ),
-      ),
+      ],),
     );
   }
 }
