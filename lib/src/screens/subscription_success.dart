@@ -73,16 +73,8 @@ class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
                   Container(
                     padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
                     child: Text(
-                      'To use your service administration panel please visit:',
+                      'To use your service administration panel please visit the Work Witness site',
                       style: TextStyle(color: Colors.cyan[200], fontSize: 22),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
-                    child: Text(
-                      'https://www.work-witness.app/panel',
-                      style: TextStyle(color: Colors.cyan[200], fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
                   ),

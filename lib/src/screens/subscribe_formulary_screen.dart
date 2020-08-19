@@ -2,8 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:work_witness/src/controller/controller.dart';
 import 'package:work_witness/src/controller/models/subscribe_info.dart';
+import 'package:work_witness/src/controller/models/subscription_result.dart';
+import 'package:work_witness/src/screens/privacy_policy.dart';
 import 'package:work_witness/src/screens/subscribe_accounts.dart';
+import 'package:work_witness/src/screens/subscription_success.dart';
+import 'package:work_witness/src/widgets/loading_Indicator.dart';
 
 class SubscribeFormularyScreen extends StatefulWidget {
   @override
@@ -25,6 +30,8 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
   bool isCompanyError = false;
   bool isEmailError = false;
   bool isPasswordError = false;
+  bool loading = false;
+  int idSubscription = 1;
 
   bool terms = false;
 
@@ -48,6 +55,65 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
           ),
         );
       } 
+    }
+
+    void subscribeProblem(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Warning!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(msg),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+      );
+    }
+
+    void onSubscribe() {
+      bool valid = _formKey.currentState.validate();
+      if (valid) {
+        _formKey.currentState.save();
+        setState(() {
+          loading = true;
+        });
+        subscribeInfo.idSubscription = idSubscription;
+        subscribeInfo.days = 30;
+
+        Controller.insertSubscription(subscribeInfo)
+            .then((SubscriptionResult subscriptionResult) {
+          setState(() {
+            loading = false;
+          });
+          if (subscriptionResult.success == true &&
+              subscriptionResult.exists == false) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => SubscriptionSuccess(),
+              ),
+            );
+          } else if (subscriptionResult.exists == true) {
+            subscribeProblem(context, 'This email already exists!');
+          } else {
+            subscribeProblem(context, 'An error occured!');
+          }
+        });
+      }
+      
     }
 
     return Scaffold(
@@ -87,6 +153,8 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
                   ),
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.name,
+                  textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -124,6 +192,7 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
                 SizedBox(height: 10),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
+                  textCapitalization: TextCapitalization.none,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -142,7 +211,7 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
                     return null;                
                   },
                   onSaved: (newValue) {
-                    subscribeInfo.email = newValue;
+                    subscribeInfo.email = newValue.toLowerCase();
                   },
                 ),
                 SizedBox(height: 30),
@@ -196,19 +265,26 @@ class _SubscribeFormularyScreenState extends State<SubscribeFormularyScreen> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Privacy Policy and Terms and Conditions in: https://www.work-witness.app',
-                  style: Theme.of(context).textTheme.bodyText2,
+                  'Your information is protected by our privacy policy.', 
+                  style: TextStyle(color: Colors.lightBlue[900], fontSize: 16),
+                  textAlign: TextAlign.center,
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>PrivacyPolicy()));
+                  }, 
+                  child: Text('Please read our privacy policy', style: TextStyle(color: Colors.lightBlue[900], fontSize: 16)),
+                  ),
+                SizedBox(height: 10),
+                !loading ?
                 RaisedButton(
                   color: Colors.green[800],
                   padding: EdgeInsets.only(top: 20, left: 40, bottom: 20, right: 40),
-                  onPressed: goNext,
-                  child: Text('continue',
+                  onPressed: onSubscribe,
+                  child: Text('Register',
                       style: Theme.of(context).textTheme.bodyText1),
-                ),
+                )
+                : LoadingIndicator(size: 30),
                 SizedBox(
                   height: 300,
                 ),

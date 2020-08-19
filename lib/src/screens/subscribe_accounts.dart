@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:work_witness/src/controller/controller.dart';
 import 'package:work_witness/src/controller/models/subscribe_info.dart';
 import 'package:work_witness/src/controller/models/subscription.dart';
-import 'package:work_witness/src/controller/models/subscription_benefit.dart';
 import 'package:work_witness/src/controller/models/subscription_result.dart';
-import 'package:work_witness/src/screens/subscribe_benefits.dart';
 import 'package:work_witness/src/screens/subscription_success.dart';
-import 'package:work_witness/src/widgets/loading_Indicator.dart';
 
 class SubscribeAccountScreen extends StatefulWidget {
   final SubscribeInfo subscribeInfo;

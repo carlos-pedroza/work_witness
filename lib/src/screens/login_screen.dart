@@ -18,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String appVersion = '1.4.3';
+  String appVersion = '1.4.4';
   
   final _formEmailKey = GlobalKey<FormState>();
   final _formPasswordKey = GlobalKey<FormState>();
@@ -220,7 +220,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text('Continue', style: TextStyle(color: Colors.white)),
             ),
             SizedBox(height: 20),
-            OutlineButton(
+            Platform.isIOS 
+            ? Container()
+            : OutlineButton(
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(

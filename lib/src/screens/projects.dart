@@ -233,16 +233,11 @@ class _ProjectsState extends State<Projects> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.all(10),
-                height: 90,
+                height: 40,
                 color: Theme.of(context).primaryColorDark,
                 child: Column(
                   children: <Widget>[
-                    Text('support: support@work-witness.app',
-                        style: TextStyle(color: Colors.white54, fontSize: 12)),
-                    Text('Terms: https://www.work-witness.app/terms',
-                        style: TextStyle(color: Colors.white54, fontSize: 12)),
-                    Text('Privacy: https://www.work-witness.app/privacy_policy',
-                        style: TextStyle(color: Colors.white54, fontSize: 12)),
+                    Text('support at: support@work-witness.app')
                   ],
                 ),
               ),
